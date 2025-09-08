@@ -1,0 +1,43 @@
+'use client';
+import { useMemo, useState } from 'react';
+import Controls from './Controls';
+import TripRows from './TripRows';
+import data from '../data/timetable.sample.json';
+
+export default function App(){
+  const [direction,setDirection] = useState<'sakai_to_tokyo'|'tokyo_to_sakai'>('sakai_to_tokyo');
+  const [tokyoStop,setTokyoStop] = useState<'oji'|'tokyo'>('oji');
+  const [nowValue,setNowValue]   = useState<string>('');
+
+  const routes = (data as any).routes as any[];
+  const trips  = useMemo(()=> direction==='sakai_to_tokyo'
+    ? (routes.find(r=>r.id==='sakai_to_tokyo')?.trips ?? [])
+    : (routes.find(r=>r.id==='tokyo_to_sakai')?.trips ?? [])
+  ,[direction]);
+
+  const note = (data as any).calendar?.note ?? '';
+
+  return (
+    <>
+      <header className="container">
+        <h1>境町 ↔ 東京 高速バス</h1>
+        <p className="muted">{note}</p>
+      </header>
+      <main className="container card">
+        <Controls
+          direction={direction} setDirection={setDirection}
+          tokyoStop={tokyoStop} setTokyoStop={setTokyoStop}
+          nowValue={nowValue} setNowValue={setNowValue}
+        />
+        <TripRows direction={direction} tokyoStop={tokyoStop} trips={trips as any} nowValue={nowValue} />
+        <section className="footer-note">
+          <p className="muted">※ 表示はダミー時刻です。<code>src/data/timetable.sample.json</code> を公式に差し替え</p>
+        </section>
+      </main>
+      <footer className="container footer">
+        <span>© 2025 Sakaimachi Bus Mini</span>
+        <a href="https://github.com/ysatodat/Sakaimachi-Tokyo-Bus-App" className="link" target="_blank" rel="noreferrer">GitHub</a>
+      </footer>
+    </>
+  );
+}

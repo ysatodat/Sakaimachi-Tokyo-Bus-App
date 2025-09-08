@@ -1,0 +1,30 @@
+---
+import "../styles/global.css";
+import App from "../components/App.tsx";
+const siteUrl = "https://ysatodat.github.io/Sakaimachi-Tokyo-Bus-App/";
+---
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>境町 ↔ 東京 高速バス（ミニ時刻・次発表示）</title>
+    <meta name="description" content="境町と東京（王子駅/東京駅）を結ぶ高速バスの次発・以降・始発/終バスを素早く確認。" />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href={siteUrl} />
+    <script type="application/ld+json">
+      {JSON.stringify({
+        "@context":"https://schema.org",
+        "@type":"WebApplication",
+        name:"境町 ↔ 東京 高速バス ミニ",
+        applicationCategory:"TravelApplication",
+        operatingSystem:"Web",
+        url: siteUrl,
+        description:"境町と東京（王子/東京駅）を結ぶ高速バスの次発・以降・始発/終バスを素早く確認。",
+        inLanguage:"ja"
+      })}
+    </script>
+  </head>
+  <body>
+    <App client:load />
+  </body>
+</html>

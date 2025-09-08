@@ -1,0 +1,23 @@
+{
+  "calendar": { "timezone": "Asia/Tokyo", "note": "ダミー。後で公式時刻表に差し替え" },
+  "routes": [
+    { "id": "sakai_to_tokyo", "stops": ["境町","王子駅","東京駅"],
+      "trips": [
+        { "dep": "06:30", "arr_oji": "07:40", "arr_tokyo": "08:10" },
+        { "dep": "08:00", "arr_oji": "09:10", "arr_tokyo": "09:40" },
+        { "dep": "10:30", "arr_oji": "11:40", "arr_tokyo": "12:10" },
+        { "dep": "13:00", "arr_oji": "14:10", "arr_tokyo": "14:40" },
+        { "dep": "16:30", "arr_oji": "17:40", "arr_tokyo": "18:10" },
+        { "dep": "20:00", "arr_oji": "21:10", "arr_tokyo": "21:40" }
+      ] },
+    { "id": "tokyo_to_sakai", "stops": ["東京駅","王子駅","境町"],
+      "trips": [
+        { "dep_oji": "07:10", "dep_tokyo": "07:40", "arr_sakai": "08:50" },
+        { "dep_oji": "09:10", "dep_tokyo": "09:40", "arr_sakai": "10:50" },
+        { "dep_oji": "12:10", "dep_tokyo": "12:40", "arr_sakai": "13:50" },
+        { "dep_oji": "15:10", "dep_tokyo": "15:40", "arr_sakai": "16:50" },
+        { "dep_oji": "18:10", "dep_tokyo": "18:40", "arr_sakai": "19:50" },
+        { "dep_oji": "21:10", "dep_tokyo": "21:40", "arr_sakai": "22:50" }
+      ] }
+  ]
+}
