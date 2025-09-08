@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import App from "../components/App.tsx";
+
+// ✅ 本番の公開URLを完全一致で（末尾スラッシュあり）
 const siteUrl = "https://ysatodat.github.io/Sakaimachi-Tokyo-Bus-App/";
 ---
 <html lang="ja">
@@ -18,8 +20,8 @@ const siteUrl = "https://ysatodat.github.io/Sakaimachi-Tokyo-Bus-App/";
         name:"境町 ↔ 東京 高速バス ミニ",
         applicationCategory:"TravelApplication",
         operatingSystem:"Web",
-        url: siteUrl,
-        description:"境町と東京（王子/東京駅）を結ぶ高速バスの次発・以降・始発/終バスを素早く確認。",
+        url: siteUrl, // ← ここも本番URL
+        description:"境町と東京（王子駅/東京駅）を結ぶ高速バスの次発・以降・始発/終バスを素早く確認。",
         inLanguage:"ja"
       })}
     </script>
