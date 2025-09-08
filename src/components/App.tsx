@@ -31,7 +31,10 @@ export default function App(){
         />
         <TripRows direction={direction} tokyoStop={tokyoStop} trips={trips as any} nowValue={nowValue} />
         <section className="footer-note">
-          <p className="muted">※ 表示はダミー時刻です。<code>src/data/timetable.sample.json</code> を公式に差し替え</p>
+          <p className="muted">
+            本アプリの時刻表は <a href="https://www.town.ibaraki-sakai.lg.jp/page/page002622.html" target="_blank" rel="noopener noreferrer">境町公式サイト掲載の時刻表</a>（令和6年4月1日改定）をもとに作成しています。<br />
+            最新の情報は必ず公式ページでご確認ください。
+          </p>
         </section>
       </main>
       <footer className="container footer">
