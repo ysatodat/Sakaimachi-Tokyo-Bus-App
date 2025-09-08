@@ -4,15 +4,35 @@ import App from "../components/App.tsx";
 
 // ✅ 本番の公開URLを完全一致で（末尾スラッシュあり）
 const siteUrl = "https://ysatodat.github.io/Sakaimachi-Tokyo-Bus-App/";
+
+const title = "境町 ↔ 東京 高速バス（ミニ時刻・次発表示）";
+const description = "境町と東京（王子駅/東京駅）を結ぶ高速バスの次発・以降・始発/終バスを素早く確認。";
+const ogImage = siteUrl + "og.png";
 ---
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>境町 ↔ 東京 高速バス（ミニ時刻・次発表示）</title>
-    <meta name="description" content="境町と東京（王子駅/東京駅）を結ぶ高速バスの次発・以降・始発/終バスを素早く確認。" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href={siteUrl} />
+
+    <!-- ✅ OGP -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="ja_JP" />
+
+    <!-- ✅ Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- JSON-LD（既存） -->
     <script type="application/ld+json">
       {JSON.stringify({
         "@context":"https://schema.org",
