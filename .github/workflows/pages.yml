@@ -10,17 +10,33 @@ permissions:
 concurrency:
   group: pages
   cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # ✅ これが必要！
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - run: npm ci || npm i
+
+      # 安定化オプション（任意）
+      - run: npm config set fetch-retries 5
+      - run: npm config set fetch-retry-mintimeout 20000
+      - run: npm config set fetch-retry-maxtimeout 120000
+
+      # lockが不安定なら一時的に install に固定してOK（あとで戻せば良い）
+      - run: npm install --no-audit --prefer-online
       - run: npm run build
-      - uses: actions/upload-pages-artifact@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with: { path: 'dist' }
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
