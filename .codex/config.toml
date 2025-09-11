@@ -1,0 +1,7 @@
+# Codex CLI project config
+# GitHub MCP server
+[mcpServers.github]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+# Uses GITHUB_TOKEN from your environment
+
