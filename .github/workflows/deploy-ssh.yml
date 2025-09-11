@@ -1,0 +1,38 @@
+name: Deploy to Custom Server (SSH)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    if: ${{ github.ref == 'refs/heads/main' && secrets.SSH_PRIVATE_KEY != '' && secrets.REMOTE_HOST != '' && secrets.REMOTE_USER != '' && secrets.REMOTE_PATH != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      - run: npm config set fetch-retries 5
+      - run: npm config set fetch-retry-mintimeout 20000
+      - run: npm config set fetch-retry-maxtimeout 120000
+
+      - name: Install deps (with fallback)
+        run: |
+          npm ci --no-audit --prefer-online \
+          || npm install --no-audit --prefer-online --package-lock=false
+
+      - run: npm run build
+
+      - name: Deploy via rsync over SSH
+        uses: easingthemes/ssh-deploy@v5.0.3
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          ARGS: "-az --delete"
+          SOURCE: "dist/"
+          TARGET: ${{ secrets.REMOTE_PATH }}
+
