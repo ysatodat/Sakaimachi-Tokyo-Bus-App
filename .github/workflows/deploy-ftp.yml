@@ -1,0 +1,53 @@
+name: Deploy to Custom Server (FTP/FTPS)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+concurrency:
+  group: ftp-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    # 実行は必要なシークレットが揃っている場合のみ
+    if: ${{ secrets.FTP_SERVER != '' && secrets.FTP_USERNAME != '' && secrets.FTP_PASSWORD != '' && secrets.FTP_DIR != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      - run: npm config set fetch-retries 5
+      - run: npm config set fetch-retry-mintimeout 20000
+      - run: npm config set fetch-retry-maxtimeout 120000
+
+      - name: Install deps (with fallback)
+        run: |
+          npm ci --no-audit --prefer-online \
+          || npm install --no-audit --prefer-online --package-lock=false
+
+      - name: Build for custom domain
+        env:
+          PUBLIC_SITE_URL: ${{ secrets.PUBLIC_SITE_URL || 'https://sakaimachi-bus.amida-des.com' }}
+          PUBLIC_BASE_PATH: ${{ secrets.PUBLIC_BASE_PATH || '/' }}
+        run: npm run build
+
+      - name: Deploy via FTP/FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ secrets.FTP_PROTOCOL || 'ftps' }}
+          port: ${{ secrets.FTP_PORT || 21 }}
+          local-dir: dist/
+          server-dir: ${{ secrets.FTP_DIR }}
+          exclude: |
+            **/.git*
+            **/.DS_Store
+            **/node_modules/**
+            **/cgi-bin/**
+

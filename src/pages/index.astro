@@ -6,6 +6,8 @@ import App from "../components/App.tsx";
 const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://ysatodat.github.io';
 const base = import.meta.env.PUBLIC_BASE_PATH ?? '/Sakaimachi-Tokyo-Bus-App/';
 const siteUrl = new URL(base, site).toString();
+const favIcon = siteUrl + 'favicon.svg';
+const appleIcon = siteUrl + 'apple-touch-icon.png';
 
 const title = "境町 ↔ 東京 高速バス（ミニ時刻・次発表示）";
 const description = "境町と東京（王子駅/東京駅）を結ぶ高速バスの次発・以降・始発/終バスを素早く確認。";
@@ -52,5 +54,5 @@ const ogImage = siteUrl + "og.png";
     <App client:load />
   </body>
 </html>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" href={favIcon} type="image/svg+xml" />
+    <link rel="apple-touch-icon" sizes="180x180" href={appleIcon} />
