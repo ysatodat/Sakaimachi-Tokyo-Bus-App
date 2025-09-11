@@ -1,0 +1,7 @@
+# Snippet for Codex MCP GitHub server
+
+[mcpServers.github]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+# Inherits GITHUB_TOKEN from your shell environment
+

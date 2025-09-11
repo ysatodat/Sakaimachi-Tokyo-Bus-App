@@ -138,3 +138,14 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .astro/
+
+# Codex / MCP local artifacts
+.codex/local/
+.codex/state/
+.codex/cache/
+.codex/sessions/
+.codex/*.secrets.*
+.codex/*.private.*
+
+# OS junk
+.DS_Store
