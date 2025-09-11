@@ -29,8 +29,11 @@ jobs:
       - run: npm config set fetch-retry-mintimeout 20000
       - run: npm config set fetch-retry-maxtimeout 120000
 
-      # lockが不安定なら一時的に install に固定してOK（あとで戻せば良い）
-      - run: npm install --no-audit --prefer-online
+      # lockfileの特定tarball 404に備えて、ci失敗時はロック無視でインストール
+      - name: Install dependencies
+        run: |
+          npm ci --no-audit --prefer-online \
+          || npm install --no-audit --prefer-online --package-lock=false
       - run: npm run build
 
       - name: Upload artifact
