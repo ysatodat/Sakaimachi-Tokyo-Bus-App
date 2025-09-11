@@ -5,3 +5,9 @@ command = "npx"
 args = ["-y", "@modelcontextprotocol/server-github"]
 # Uses GITHUB_TOKEN from your environment
 
+# --- Notes / Project Policy ---
+# - Read系（ファイル閲覧・検索・ログ取得等）は承認不要でOK（運用ポリシー）。
+# - Write系やネットワーク操作（コミット/Push/PR作成/依存取得等）は承認が必要。
+# - PRのタイトル・本文は日本語を基本とする。
+# これらは運用ルールであり、CLIの動作は実行環境の承認設定に依存します。
+# 詳細は CONTRIBUTING.md を参照してください。
