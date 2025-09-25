@@ -67,6 +67,13 @@ jobs:
           PUBLIC_BASE_PATH: ${{ secrets.PUBLIC_BASE_PATH || '/' }}
         run: npm run build
 
+      - name: Normalize server directory
+        if: ${{ steps.secrets-ready.outputs.ready == 'true' }}
+        id: server-dir
+        run: |
+          dir="${{ secrets.FTP_DIR }}"
+          [[ "$dir" == */ ]] && echo "value=$dir" >> "$GITHUB_OUTPUT" || echo "value=$dir/" >> "$GITHUB_OUTPUT"
+
       - name: Deploy via FTP/FTPS
         if: ${{ steps.secrets-ready.outputs.ready == 'true' }}
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -77,7 +84,7 @@ jobs:
           protocol: ${{ secrets.FTP_PROTOCOL || 'ftp' }}
           port: ${{ secrets.FTP_PORT || 21 }}
           local-dir: dist/
-          server-dir: ${{ secrets.FTP_DIR }}
+          server-dir: ${{ steps.server-dir.outputs.value }}
           exclude: |
             **/.git*
             **/.DS_Store
