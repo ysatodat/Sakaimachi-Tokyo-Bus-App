@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ysatodat.github.io/Sakaimachi-Tokyo-Bus-App/sitemap-index.xml
+Sitemap: https://sakaimachi-bus.amida-des.com/sitemap-index.xml
