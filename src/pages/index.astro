@@ -45,6 +45,7 @@ const jsonLd = {
   author: siteAuthor,
   sameAs: sameAsLinks
 };
+const initialNowIso = new Date().toISOString();
 ---
 <html lang="ja">
   <head>
@@ -91,6 +92,6 @@ const jsonLd = {
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
-    <App client:load />
+    <App client:load initialNowIso={initialNowIso} />
   </body>
 </html>

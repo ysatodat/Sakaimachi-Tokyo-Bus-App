@@ -1,6 +1,8 @@
 // 置き換え対象: src/components/TripRows.tsx
 import React, { useEffect, useMemo, useState } from 'react';
-import { fmtHHmm, minutesUntil, parseHHmm, now as nowFn } from '../lib/time';
+import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import { fmtHHmm, minutesUntil, parseHHmm, now as nowFn, ZONE } from '../lib/time';
 
 type STT =
   | { dep: string, arr_oji: string, arr_tokyo: string } // 既存フォーマット互換
@@ -9,23 +11,38 @@ type STT =
 type TTS = { dep_oji: string, dep_tokyo: string, arr_sakai: string };
 
 export default function TripRows({
-  direction, tokyoStop, trips, nowValue
+  direction, tokyoStop, trips, nowValue, initialNowIso
 }:{
   direction:'sakai_to_tokyo'|'tokyo_to_sakai';
   tokyoStop:'oji'|'tokyo';
   trips:(STT|TTS)[];
   nowValue:string;
+  initialNowIso: string;
 }){
-  // 現在時刻（1秒ごとに更新）。nowValueがある場合はその時刻を起点にカウントを進める
+  const initialBase = useMemo(() => dayjs(initialNowIso).tz(ZONE), [initialNowIso]);
+  const [baseNow, setBaseNow] = useState<Dayjs>(initialBase);
   const [tick, setTick] = useState(0);
-  useEffect(()=>{
-    const id = setInterval(()=> setTick(t=>t+1), 1000);
-    return ()=> clearInterval(id);
-  },[]);
-  const now = useMemo(()=>{
-    if (!nowValue) return nowFn();
-    return parseHHmm(nowValue).add(tick, 'second');
-  }, [nowValue, tick]);
+
+  useEffect(() => {
+    setTick(0);
+    if (nowValue) {
+      setBaseNow(parseHHmm(nowValue));
+      return;
+    }
+    setBaseNow(nowFn());
+  }, [nowValue]);
+
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const now = useMemo(() => {
+    if (nowValue) {
+      return baseNow.add(tick, 'second');
+    }
+    return tick === 0 ? baseNow : nowFn();
+  }, [baseNow, nowValue, tick]);
   const isHoliday = [0,6].includes(now.day()); // 日=0, 土=6（※祝日カレンダーは別途拡張可）
 
   // ヘルパー: 文字列 or {weekday,holiday} の時刻を選んでパース
