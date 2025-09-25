@@ -72,7 +72,23 @@ jobs:
         id: server-dir
         run: |
           dir="${{ secrets.FTP_DIR }}"
-          [[ "$dir" == */ ]] && echo "value=$dir" >> "$GITHUB_OUTPUT" || echo "value=$dir/" >> "$GITHUB_OUTPUT"
+          dir="$(printf '%s' "$dir" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
+          if [[ "$dir" == *"://"* ]]; then
+            dir="$(printf '%s' "$dir" | sed -E 's#^[a-zA-Z0-9.+-]+://[^/]*##')"
+          fi
+
+          if [[ -z "$dir" || "$dir" == "." ]]; then
+            dir="/"
+          fi
+
+          dir="$(printf '%s' "$dir" | sed -e 's#//*#/#g')"
+
+          if [[ "$dir" != "/" && "$dir" != "./" && "$dir" != */ ]]; then
+            dir="$dir/"
+          fi
+
+          echo "value=$dir" >> "$GITHUB_OUTPUT"
 
       - name: Deploy via FTP/FTPS
         if: ${{ steps.secrets-ready.outputs.ready == 'true' }}
