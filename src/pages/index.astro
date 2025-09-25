@@ -21,6 +21,8 @@ const ogImage = siteUrl + "og.png";
     <meta name="description" content={description} />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href={siteUrl} />
+    <link rel="icon" href={favIcon} type="image/svg+xml" />
+    <link rel="apple-touch-icon" sizes="180x180" href={appleIcon} />
 
     <!-- ✅ OGP -->
     <meta property="og:type" content="website" />
@@ -54,5 +56,3 @@ const ogImage = siteUrl + "og.png";
     <App client:load />
   </body>
 </html>
-    <link rel="icon" href={favIcon} type="image/svg+xml" />
-    <link rel="apple-touch-icon" sizes="180x180" href={appleIcon} />
