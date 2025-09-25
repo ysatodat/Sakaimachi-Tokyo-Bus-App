@@ -1,8 +1,11 @@
 name: Deploy to GitHub Pages
 on:
-  push:
-    branches: [ main ]
-  workflow_dispatch: {}
+  # GitHub Pages 用の公開は手動トリガーのみに変更
+  workflow_dispatch:
+    inputs:
+      note:
+        description: Optional note about this deployment run
+        required: false
 permissions:
   contents: read
   pages: write
@@ -35,6 +38,9 @@ jobs:
           npm ci --no-audit --prefer-online \
           || npm install --no-audit --prefer-online --package-lock=false
       - run: npm run build
+        env:
+          PUBLIC_SITE_URL: https://ysatodat.github.io
+          PUBLIC_BASE_PATH: /Sakaimachi-Tokyo-Bus-App/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
