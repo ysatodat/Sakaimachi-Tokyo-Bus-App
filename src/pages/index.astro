@@ -27,6 +27,24 @@ const keywords = [
 ].join(", ");
 const publisher = { name: "Amida Design", url: "https://amida-des.com" };
 const sameAsLinks = ["https://twitter.com/gmkz_com"];
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: siteName,
+  applicationCategory: "TravelApplication",
+  operatingSystem: "Web",
+  url: siteUrl,
+  description,
+  inLanguage: "ja",
+  image: ogImage,
+  publisher: {
+    "@type": "Organization",
+    name: publisher.name,
+    url: publisher.url
+  },
+  author: siteAuthor,
+  sameAs: sameAsLinks
+};
 ---
 <html lang="ja">
   <head>
@@ -70,26 +88,7 @@ const sameAsLinks = ["https://twitter.com/gmkz_com"];
     <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <!-- JSON-LD（既存） -->
-    <script type="application/ld+json">
-      {JSON.stringify({
-        "@context":"https://schema.org",
-        "@type":"WebApplication",
-        name: siteName,
-        applicationCategory:"TravelApplication",
-        operatingSystem:"Web",
-        url: siteUrl, // ← ここも本番URL
-        description,
-        inLanguage:"ja",
-        image: ogImage,
-        publisher: {
-          "@type":"Organization",
-          name: publisher.name,
-          url: publisher.url
-        },
-        author: siteAuthor,
-        sameAs: sameAsLinks
-      })}
-    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <App client:load />
