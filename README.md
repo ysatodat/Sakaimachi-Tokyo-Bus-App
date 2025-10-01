@@ -40,7 +40,7 @@ https://sakaimachi-bus.amida-des.com/
 - ご利用によって生じたいかなる損害についても、本アプリの作者は責任を負いかねます。
 
 ## 連絡先・フィードバック
-不具合報告やご要望がありましたら、GitHub Issues または X（旧Twitter）: [@ysatodat](https://twitter.com/ysatodat) までお知らせください。
+不具合報告やご要望がありましたら、GitHub Issues または X（旧Twitter）: [@gmkz_com](https://x.com/gmkz_com) までお知らせください。
 
 ---
 
