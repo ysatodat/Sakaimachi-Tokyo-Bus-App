@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import App from "../components/App.tsx";
+import timetable from "../data/timetable.sample.json";
 
 // ✅ 本番URLは環境変数で切替（既定は独自ドメイン）
 const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://sakaimachi-bus.amida-des.com';
@@ -10,8 +11,8 @@ const favIcon = siteUrl + 'favicon.svg';
 const appleIcon = siteUrl + 'apple-touch-icon.png';
 
 const siteName = "境町 ↔ 東京 高速バス ミニ";
-const title = "境町 ↔ 東京 高速バス（ミニ時刻・次発表示）";
-const description = "境町と東京（王子駅/東京駅）を結ぶ高速バスの次発・以降・始発/終バスを素早く確認。";
+const title = "境町 ↔ 東京 高速バス（王子駅・東京駅発着の次発・時刻表）";
+const description = "境町バスターミナルと王子駅・東京駅を結ぶ高速バスの次発・以降・始発/終バスを平日/土日祝ダイヤ別に素早く確認できます。";
 const ogImage = siteUrl + "og.png";
 const ogImageAlt = "境町と東京を結ぶ高速バスの次発情報を伝えるOGPバナー";
 const ogImageHeight = "630";
@@ -22,12 +23,21 @@ const keywords = [
   "境町高速バス",
   "境町 東京 バス",
   "王子駅 高速バス",
+  "東京駅 高速バス",
   "境町バスターミナル",
-  "高速バス 時刻表"
+  "高速バス 時刻表",
+  "境町 東京 直行バス"
 ].join(", ");
 const publisher = { name: "Amida Design", url: "https://amida-des.com" };
 const sameAsLinks = ["https://twitter.com/gmkz_com"];
-const jsonLd = {
+const normaliseTime = (value: string | { weekday?: string; holiday?: string }) =>
+  typeof value === "string"
+    ? value
+    : (value?.weekday ?? value?.holiday ?? "");
+
+const routes = (timetable as any)?.routes ?? [];
+
+const schemaWebApp = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   name: siteName,
@@ -43,8 +53,68 @@ const jsonLd = {
     url: publisher.url
   },
   author: siteAuthor,
-  sameAs: sameAsLinks
+  sameAs: sameAsLinks,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${siteUrl}?q={search_term_string}`,
+    "query-input": "required name=search_term_string"
+  }
 };
+
+const routeSchemas = routes.map((route: any) => {
+  const isOutbound = route.id === "sakai_to_tokyo";
+  const routeName = isOutbound ? "境町発 東京駅・王子駅 行き" : "東京駅・王子駅発 境町 行き";
+  const stops = Array.isArray(route.stops) ? route.stops : [];
+  const departure = stops[0] ?? (isOutbound ? "境町バスターミナル" : "東京駅" );
+  const arrival = stops[stops.length - 1] ?? (isOutbound ? "東京駅" : "境町バスターミナル");
+  const trips = (route.trips ?? []).slice(0, 6);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "PublicTransportRoute",
+    name: `境町⇄東京 高速バス ${routeName}`,
+    provider: {
+      "@type": "Organization",
+      name: "境町⇄東京 高速バス",
+      url: siteUrl
+    },
+    routeCode: isOutbound ? "sakai-tokyo" : "tokyo-sakai",
+    departureStation: {
+      "@type": "BusStation",
+      name: departure
+    },
+    arrivalStation: {
+      "@type": "BusStation",
+      name: arrival
+    },
+    hasPart: {
+      "@type": "ItemList",
+      itemListElement: trips.map((trip: any, index: number) => {
+        const dep = isOutbound ? trip.dep : (route.id === "tokyo_to_sakai" ? trip.dep_tokyo : trip.dep);
+        const arr = isOutbound ? normaliseTime(trip.arr_tokyo) : trip.arr_sakai;
+        return {
+          "@type": "BusTrip",
+          position: index + 1,
+          name: isOutbound
+            ? `境町 ${trip.dep} 発 → 東京 ${normaliseTime(trip.arr_tokyo)} 着`
+            : `${trip.dep_tokyo ?? trip.dep_oji} 発 → 境町 ${trip.arr_sakai} 着`,
+          departureTime: dep,
+          arrivalTime: arr,
+          departureBusStop: {
+            "@type": "BusStop",
+            name: isOutbound ? "境町バスターミナル" : "東京駅八重洲南口"
+          },
+          arrivalBusStop: {
+            "@type": "BusStop",
+            name: isOutbound ? "東京駅八重洲南口" : "境町バスターミナル"
+          }
+        };
+      })
+    }
+  };
+});
+
+const jsonLd = [schemaWebApp, ...routeSchemas];
 const initialNowIso = new Date().toISOString();
 ---
 <html lang="ja">
