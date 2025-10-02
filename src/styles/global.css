@@ -18,7 +18,7 @@ select,input[type=time]{width:100%;padding:14px 16px;border-radius:14px;backgrou
 .segmented__option.is-active{background:rgba(47,129,247,.16);border-color:rgba(47,129,247,.4);color:var(--text);box-shadow:0 0 0 1px rgba(47,129,247,.25)}
 .segmented__option.is-active .segmented__eyebrow{color:#8fb7ff}
 .ghost{margin-top:8px;padding:10px 12px;background:transparent;color:var(--muted);border:1px dashed var(--border);border-radius:10px;cursor:pointer;min-height:44px}
-.summary{display:flex;gap:8px;flex-wrap:wrap;padding:16px}
+.summary{position:sticky;top:0;z-index:4;display:flex;gap:8px;flex-wrap:wrap;padding:16px;background:rgba(18,22,27,.94);backdrop-filter:blur(14px);margin:0 0 12px;border-bottom:1px solid rgba(31,38,48,.7);box-shadow:0 18px 36px -28px rgba(0,0,0,.8)}
 .chip{display:flex;align-items:center;gap:8px;background:rgba(154,167,179,.12);border:none;padding:8px 12px;border-radius:10px;font-size:12px;color:var(--muted);cursor:default;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
 .chip span{font-size:11px;letter-spacing:.05em;color:rgba(230,237,243,.7);font-weight:600}
 .chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:.4}
