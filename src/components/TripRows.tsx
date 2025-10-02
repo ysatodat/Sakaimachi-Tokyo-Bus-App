@@ -1,5 +1,5 @@
 // 置き換え対象: src/components/TripRows.tsx
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
 import { fmtHHmm, minutesUntil, parseHHmm, now as nowFn, ZONE } from '../lib/time';
@@ -22,6 +22,9 @@ export default function TripRows({
   const initialBase = useMemo(() => dayjs(initialNowIso).tz(ZONE), [initialNowIso]);
   const [baseNow, setBaseNow] = useState<Dayjs>(initialBase);
   const [tick, setTick] = useState(0);
+  const [showA2hs, setShowA2hs] = useState(false);
+  const [heroMessage, setHeroMessage] = useState('');
+  const messageTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setTick(0);
@@ -35,6 +38,20 @@ export default function TripRows({
   useEffect(() => {
     const id = setInterval(() => setTick((t) => t + 1), 1000);
     return () => clearInterval(id);
+  }, []);
+
+  const showHeroMessage = useCallback((text: string) => {
+    if (messageTimer.current) {
+      clearTimeout(messageTimer.current);
+    }
+    setHeroMessage(text);
+    messageTimer.current = setTimeout(() => setHeroMessage(''), 2400);
+  }, [setHeroMessage]);
+
+  useEffect(() => () => {
+    if (messageTimer.current) {
+      clearTimeout(messageTimer.current);
+    }
   }, []);
 
   const now = useMemo(() => {
@@ -72,6 +89,42 @@ export default function TripRows({
   const last  = parsed[parsed.length-1];
   const next  = parsed.find((t:any)=>t.dep.isAfter(now));
   const upcoming = parsed.filter((t:any)=>t.dep.isAfter(now)).slice(1,5);
+  const nav = typeof navigator !== 'undefined' ? navigator : undefined;
+  const shareSupported = !!(nav && 'share' in nav);
+
+  const handleShare = useCallback(async () => {
+    const shareUrl = typeof window !== 'undefined' ? window.location.href : 'https://sakaimachi-bus.amida-des.com/';
+    const shareTitle = '境町 ↔ 東京 高速バス';
+    const shareText = (() => {
+      if (!next) {
+        return '境町と東京を結ぶ高速バスの時刻・次発をチェックしよう。';
+      }
+      if (direction === 'sakai_to_tokyo') {
+        return `次の便は境町 ${fmtHHmm(next.dep)} 発 → 東京 ${fmtHHmm((next as any).arr_tokyo)} 着（王子 ${fmtHHmm((next as any).arr_oji)}）`;
+      }
+      return `次の便は${tokyoStop==='oji'?'王子':'東京'} ${fmtHHmm(next.dep)} 発 → 境町 ${fmtHHmm((next as any).arr_sakai)} 着`;
+    })();
+
+    try {
+      if (shareSupported && nav?.share) {
+        await nav.share({ title: shareTitle, text: shareText, url: shareUrl });
+        showHeroMessage('共有メニューを開きました');
+        return;
+      }
+      if (nav?.clipboard && nav.clipboard.writeText) {
+        await nav.clipboard.writeText(shareUrl);
+        showHeroMessage('リンクをコピーしました');
+        return;
+      }
+      showHeroMessage(`URL: ${shareUrl}`);
+    } catch (error) {
+      if ((error as DOMException)?.name === 'AbortError') {
+        showHeroMessage('共有をキャンセルしました');
+        return;
+      }
+      showHeroMessage('共有に失敗しました');
+    }
+  }, [direction, nav, next, shareSupported, showHeroMessage, tokyoStop]);
 
   const fmtHMRemain = (minutes:number) => {
     const h = Math.floor(minutes/60);
@@ -130,6 +183,31 @@ export default function TripRows({
                   : <>{tokyoStop==='oji'?'王子':'東京'} 発 → 境町 {fmtHHmm((next as any).arr_sakai)}</>}
               </div>
             </>
+          )}
+          <div className="hero-actions" aria-label="クイックアクション">
+            <button type="button" className="hero-action" onClick={handleShare}>
+              <span aria-hidden="true">↗</span>
+              <span>{shareSupported ? '共有する' : 'リンクをコピー'}</span>
+            </button>
+            <button
+              type="button"
+              className={showA2hs ? 'hero-action is-active' : 'hero-action'}
+              onClick={()=>setShowA2hs((v)=>!v)}
+              aria-expanded={showA2hs}
+              aria-pressed={showA2hs}
+            >
+              <span aria-hidden="true">★</span>
+              <span>ホーム画面に追加</span>
+            </button>
+          </div>
+          {heroMessage && (
+            <div className="hero-feedback" role="status">{heroMessage}</div>
+          )}
+          {showA2hs && (
+            <div className="hero-helper" role="note">
+              <p>iOS: Safariの共有ボタンから「ホーム画面に追加」を選択してください。</p>
+              <p>Android: Chromeのメニュー → 「ホーム画面に追加」で素早く開けます。</p>
+            </div>
           )}
         </div>
         <h2>以降</h2>
