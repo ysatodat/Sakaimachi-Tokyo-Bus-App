@@ -65,10 +65,6 @@ const withBase = (slug: string) => {
     <link rel="alternate" hreflang="ja" href={sakaiToTokyoUrl} />
     <link rel="alternate" hreflang="ja" href={tokyoToSakaiUrl} />
     <link rel="alternate" hreflang="ja" href={guideUrl} />
-    <link rel="prefetch" href={siteUrl} as="document" />
-    <link rel="prefetch" href={sakaiToTokyoUrl} as="document" />
-    <link rel="prefetch" href={tokyoToSakaiUrl} as="document" />
-    <link rel="prefetch" href={guideUrl} as="document" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -81,6 +77,10 @@ const withBase = (slug: string) => {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${siteUrl}og.png`} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <link rel="prefetch" href={siteUrl} as="document" />
+    <link rel="prefetch" href={sakaiToTokyoUrl} as="document" />
+    <link rel="prefetch" href={tokyoToSakaiUrl} as="document" />
+    <link rel="prefetch" href={guideUrl} as="document" />
     <Analytics />
   </head>
   <body>

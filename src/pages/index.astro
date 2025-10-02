@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import App from "../components/App.tsx";
 import timetable from "../data/timetable.sample.json";
+import Analytics from "../components/Analytics.astro";
 
 // ✅ 本番URLは環境変数で切替（既定は独自ドメイン）
 const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://sakaimachi-bus.amida-des.com';
@@ -32,6 +33,8 @@ const publisher = { name: "Amida Design", url: "https://amida-des.com" };
 const sameAsLinks = ["https://twitter.com/gmkz_com"];
 const sakaiToTokyoUrl = new URL('sakai-to-tokyo/', siteUrl).toString();
 const tokyoToSakaiUrl = new URL('tokyo-to-sakai/', siteUrl).toString();
+const faqUrl = new URL('faq/', siteUrl).toString();
+const guideUrl = new URL('guide/', siteUrl).toString();
 const normaliseTime = (value: string | { weekday?: string; holiday?: string }) =>
   typeof value === "string"
     ? value
@@ -135,6 +138,10 @@ const initialNowIso = new Date().toISOString();
     <link rel="alternate" hreflang="ja-JP" href={siteUrl} />
     <link rel="alternate" hreflang="ja-JP" href={sakaiToTokyoUrl} />
     <link rel="alternate" hreflang="ja-JP" href={tokyoToSakaiUrl} />
+    <link rel="prefetch" href={sakaiToTokyoUrl} as="document" />
+    <link rel="prefetch" href={tokyoToSakaiUrl} as="document" />
+    <link rel="prefetch" href={faqUrl} as="document" />
+    <link rel="prefetch" href={guideUrl} as="document" />
     <link rel="icon" href={favIcon} type="image/svg+xml" />
     <link rel="apple-touch-icon" sizes="180x180" href={appleIcon} />
 
@@ -164,6 +171,7 @@ const initialNowIso = new Date().toISOString();
 
     <!-- JSON-LD（既存） -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <Analytics />
   </head>
   <body>
     <App client:load initialNowIso={initialNowIso} />

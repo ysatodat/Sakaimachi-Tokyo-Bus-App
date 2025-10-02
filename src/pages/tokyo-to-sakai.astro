@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import App from "../components/App.tsx";
 import timetable from "../data/timetable.sample.json";
+import Analytics from "../components/Analytics.astro";
 
 const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://sakaimachi-bus.amida-des.com';
 const base = import.meta.env.PUBLIC_BASE_PATH ?? '/';
@@ -96,6 +97,8 @@ const jsonLd = [pageSchema, breadcrumbSchema, routeSchema].filter(Boolean);
 const initialNowIso = new Date().toISOString();
 const overviewUrl = siteUrl;
 const sakaiToTokyoUrl = new URL('sakai-to-tokyo/', siteUrl).toString();
+const faqUrl = new URL('faq/', siteUrl).toString();
+const guideUrl = new URL('guide/', siteUrl).toString();
 ---
 <html lang="ja">
   <head>
@@ -112,6 +115,9 @@ const sakaiToTokyoUrl = new URL('sakai-to-tokyo/', siteUrl).toString();
     <link rel="alternate" hreflang="ja" href={overviewUrl} />
     <link rel="alternate" hreflang="ja" href={sakaiToTokyoUrl} />
     <link rel="alternate" hreflang="x-default" href={overviewUrl} />
+    <link rel="prefetch" href={sakaiToTokyoUrl} as="document" />
+    <link rel="prefetch" href={faqUrl} as="document" />
+    <link rel="prefetch" href={guideUrl} as="document" />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
@@ -133,6 +139,7 @@ const sakaiToTokyoUrl = new URL('sakai-to-tokyo/', siteUrl).toString();
     <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <Analytics />
   </head>
   <body>
     <App
