@@ -4,6 +4,10 @@ body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-ap
 @media (max-width: 480px){ body{ font-size:17px; } }
 .container{max-width:960px;margin:0 auto;padding:16px}
 header h1{margin:16px 0 4px;font-weight:800;letter-spacing:.02em}
+.route-links{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px;padding:0}
+.route-link{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1px solid rgba(47,129,247,.22);color:var(--muted);font-size:13px;text-decoration:none;background:rgba(15,19,24,.72);transition:background .2s,border-color .2s,color .2s}
+.route-link:hover{color:var(--text);border-color:rgba(47,129,247,.45);background:rgba(47,129,247,.12)}
+.route-link.is-active{color:var(--text);background:rgba(47,129,247,.22);border-color:rgba(47,129,247,.6);box-shadow:0 0 0 1px rgba(47,129,247,.3)}
 .muted{color:var(--muted)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
 .controls{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));padding:16px;border-bottom:1px solid var(--border)}

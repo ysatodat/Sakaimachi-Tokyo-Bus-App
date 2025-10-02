@@ -1,0 +1,145 @@
+---
+import "../styles/global.css";
+import App from "../components/App.tsx";
+import timetable from "../data/timetable.sample.json";
+
+const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://sakaimachi-bus.amida-des.com';
+const base = import.meta.env.PUBLIC_BASE_PATH ?? '/';
+const siteUrl = new URL(base, site).toString();
+const pageSlug = 'sakai-to-tokyo/';
+const canonicalUrl = new URL(pageSlug, siteUrl).toString();
+const ogImage = siteUrl + "og.png";
+const ogImageAlt = "境町発 東京行き高速バスの次発を伝えるOGP";
+const ogImageHeight = "630";
+const ogImageWidth = "1200";
+const twitterHandle = "@gmkz_com";
+const siteAuthor = "Amida Design（非公式）";
+const keywords = [
+  "境町 東京 バス",
+  "境町王子 高速バス",
+  "境町バスターミナル 東京",
+  "境町 東京駅 高速バス",
+  "境町 東京 直行バス"
+].join(", ");
+
+const normaliseTime = (value: string | { weekday?: string; holiday?: string }) =>
+  typeof value === "string"
+    ? value
+    : (value?.weekday ?? value?.holiday ?? "");
+
+const route = (timetable as any)?.routes?.find((r: any) => r.id === 'sakai_to_tokyo');
+const trips = (route?.trips ?? []).slice(0, 6);
+const stops = Array.isArray(route?.stops) ? route?.stops : [];
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "境町 ↔ 東京 高速バス",
+      item: siteUrl
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "境町 → 東京 時刻表",
+      item: canonicalUrl
+    }
+  ]
+};
+
+const routeSchema = route ? {
+  "@context": "https://schema.org",
+  "@type": "PublicTransportRoute",
+  name: "境町発 東京行き 高速バス",
+  provider: {
+    "@type": "Organization",
+    name: "境町⇄東京 高速バス",
+    url: siteUrl
+  },
+  routeCode: "sakai-tokyo",
+  departureStation: {
+    "@type": "BusStation",
+    name: stops[0] ?? "境町バスターミナル"
+  },
+  arrivalStation: {
+    "@type": "BusStation",
+    name: stops[stops.length - 1] ?? "東京駅八重洲南口"
+  },
+  hasPart: {
+    "@type": "ItemList",
+    itemListElement: trips.map((trip: any, index: number) => ({
+      "@type": "BusTrip",
+      position: index + 1,
+      name: `境町 ${trip.dep} 発 → 東京 ${normaliseTime(trip.arr_tokyo)} 着`,
+      departureTime: trip.dep,
+      arrivalTime: normaliseTime(trip.arr_tokyo),
+      departureBusStop: {
+        "@type": "BusStop",
+        name: "境町バスターミナル"
+      },
+      arrivalBusStop: {
+        "@type": "BusStop",
+        name: "東京駅八重洲南口"
+      }
+    }))
+  }
+} : null;
+
+const pageSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "境町 → 東京 高速バスの時刻表・次の便",
+  description: "境町バスターミナルから王子駅・東京駅へ向かう高速バス（平日・土日祝ダイヤ）の次発や時刻表を確認できるページです。",
+  url: canonicalUrl,
+  inLanguage: "ja"
+};
+
+const jsonLd = [pageSchema, breadcrumbSchema, routeSchema].filter(Boolean);
+const initialNowIso = new Date().toISOString();
+const overviewUrl = siteUrl;
+const tokyoToSakaiUrl = new URL('tokyo-to-sakai/', siteUrl).toString();
+---
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>境町 → 東京 高速バスの時刻表・次発案内 | 境町バスミニ</title>
+    <meta name="description" content="境町から王子駅・東京駅へ向かう高速バスの次発・以降・始発/終バス時刻を平日/土日祝ダイヤ別に確認できます。" />
+    <meta name="robots" content="index,follow" />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content={siteAuthor} />
+    <meta name="application-name" content="境町 ↔ 東京 高速バス ミニ" />
+    <meta name="theme-color" content="#0ea5e9" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="ja" href={overviewUrl} />
+    <link rel="alternate" hreflang="ja" href={tokyoToSakaiUrl} />
+    <link rel="alternate" hreflang="x-default" href={overviewUrl} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content="境町 → 東京 高速バスの時刻表・次発案内" />
+    <meta property="og:description" content="境町発の高速バスで王子駅・東京駅へ向かう便の次発・時刻表をまとめています。" />
+    <meta property="og:site_name" content="境町 ↔ 東京 高速バス ミニ" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:image:width" content={ogImageWidth} />
+    <meta property="og:image:height" content={ogImageHeight} />
+    <meta property="og:locale" content="ja_JP" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={twitterHandle} />
+    <meta name="twitter:creator" content={twitterHandle} />
+    <meta name="twitter:title" content="境町 → 東京 高速バスの時刻表・次発案内" />
+    <meta name="twitter:description" content="境町発の高速バスで王子駅・東京駅へ向かう次の便を一目で確認できます。" />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <App client:load initialNowIso={initialNowIso} initialDirection="sakai_to_tokyo" currentView="sakai_to_tokyo" />
+  </body>
+</html>

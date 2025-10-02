@@ -30,6 +30,8 @@ const keywords = [
 ].join(", ");
 const publisher = { name: "Amida Design", url: "https://amida-des.com" };
 const sameAsLinks = ["https://twitter.com/gmkz_com"];
+const sakaiToTokyoUrl = new URL('sakai-to-tokyo/', siteUrl).toString();
+const tokyoToSakaiUrl = new URL('tokyo-to-sakai/', siteUrl).toString();
 const normaliseTime = (value: string | { weekday?: string; holiday?: string }) =>
   typeof value === "string"
     ? value
@@ -131,6 +133,8 @@ const initialNowIso = new Date().toISOString();
     <meta name="theme-color" content="#0ea5e9" />
     <link rel="canonical" href={siteUrl} />
     <link rel="alternate" hreflang="ja-JP" href={siteUrl} />
+    <link rel="alternate" hreflang="ja-JP" href={sakaiToTokyoUrl} />
+    <link rel="alternate" hreflang="ja-JP" href={tokyoToSakaiUrl} />
     <link rel="icon" href={favIcon} type="image/svg+xml" />
     <link rel="apple-touch-icon" sizes="180x180" href={appleIcon} />
 

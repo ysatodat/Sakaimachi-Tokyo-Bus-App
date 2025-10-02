@@ -4,11 +4,28 @@ import Controls from './Controls';
 import TripRows from './TripRows';
 import data from '../data/timetable.sample.json';
 
-type AppProps = { initialNowIso: string };
+type AppProps = {
+  initialNowIso: string;
+  initialDirection?: 'sakai_to_tokyo'|'tokyo_to_sakai';
+  initialTokyoStop?: 'oji'|'tokyo';
+  currentView?: 'overview'|'sakai_to_tokyo'|'tokyo_to_sakai';
+};
 
-export default function App({ initialNowIso }: AppProps){
-  const [direction,setDirection] = useState<'sakai_to_tokyo'|'tokyo_to_sakai'>('sakai_to_tokyo');
-  const [tokyoStop,setTokyoStop] = useState<'oji'|'tokyo'>('oji');
+const withBasePath = (slug: string) => {
+  const base = import.meta.env.PUBLIC_BASE_PATH ?? '/';
+  const normalizedBase = base === '/' ? '' : base.replace(/\/$/, '');
+  const normalizedSlug = slug.startsWith('/') ? slug : `/${slug}`;
+  return `${normalizedBase}${normalizedSlug}` || '/';
+};
+
+export default function App({
+  initialNowIso,
+  initialDirection = 'sakai_to_tokyo',
+  initialTokyoStop = 'oji',
+  currentView = 'overview'
+}: AppProps){
+  const [direction,setDirection] = useState<'sakai_to_tokyo'|'tokyo_to_sakai'>(initialDirection);
+  const [tokyoStop,setTokyoStop] = useState<'oji'|'tokyo'>(initialTokyoStop);
   const [nowValue,setNowValue]   = useState<string>('');
 
   const routes = (data as any).routes as any[];
@@ -23,6 +40,17 @@ export default function App({ initialNowIso }: AppProps){
     <>
       <header className="container">
         <h1>境町 ↔ 東京 高速バス</h1>
+        <nav className="route-links" aria-label="路線ページ">
+          <a className={currentView==='overview' ? 'route-link is-active' : 'route-link'} href={withBasePath('/') }>
+            総合
+          </a>
+          <a className={currentView==='sakai_to_tokyo' ? 'route-link is-active' : 'route-link'} href={withBasePath('/sakai-to-tokyo/') }>
+            境町 → 東京
+          </a>
+          <a className={currentView==='tokyo_to_sakai' ? 'route-link is-active' : 'route-link'} href={withBasePath('/tokyo-to-sakai/') }>
+            東京 → 境町
+          </a>
+        </nav>
         <p className="muted">{note}</p>
       </header>
       <main className="container card">
