@@ -101,9 +101,9 @@ export default function TripRows({
   return (
     <div>
       <section className="summary">
-        <div className="chip">始発: {first? fmtHHmm(first.dep): '--:--'}</div>
-        <div className="chip">終バス: {last? fmtHHmm(last.dep): '--:--'}</div>
-        <div className="chip">{isHoliday ? '土日祝ダイヤ' : '平日ダイヤ'}</div>
+        <div className="chip"><span>始発</span><strong>{first? fmtHHmm(first.dep): '--:--'}</strong></div>
+        <div className="chip"><span>終バス</span><strong>{last? fmtHHmm(last.dep): '--:--'}</strong></div>
+        <div className="chip"><span>運行</span><strong>{isHoliday ? '土日祝ダイヤ' : '平日ダイヤ'}</strong></div>
       </section>
       <section className="results">
         <h2 className="sr-only">次発</h2>
