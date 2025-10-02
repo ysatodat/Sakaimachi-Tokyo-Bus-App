@@ -75,8 +75,12 @@ export default function App({
       </main>
       <footer className="container footer">
         <span>© 2025 Amida Design · Sakaimachi Bus Mini</span>
-        <a href="https://amida-des.com/" className="link" target="_blank" rel="noreferrer">Amida Design</a>
-        <a href="https://github.com/ysatodat/Sakaimachi-Tokyo-Bus-App" className="link" target="_blank" rel="noreferrer">GitHub</a>
+        <nav className="footer-links" aria-label="補足ページ">
+          <a className="link" href={withBasePath('/faq/')}>FAQ</a>
+          <a className="link" href={withBasePath('/guide/')}>乗車ガイド</a>
+          <a href="https://amida-des.com/" className="link" target="_blank" rel="noreferrer">Amida Design</a>
+          <a href="https://github.com/ysatodat/Sakaimachi-Tokyo-Bus-App" className="link" target="_blank" rel="noreferrer">GitHub</a>
+        </nav>
       </footer>
     </>
   );

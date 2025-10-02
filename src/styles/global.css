@@ -8,8 +8,24 @@ header h1{margin:16px 0 4px;font-weight:800;letter-spacing:.02em}
 .route-link{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1px solid rgba(47,129,247,.22);color:var(--muted);font-size:13px;text-decoration:none;background:rgba(15,19,24,.72);transition:background .2s,border-color .2s,color .2s}
 .route-link:hover{color:var(--text);border-color:rgba(47,129,247,.45);background:rgba(47,129,247,.12)}
 .route-link.is-active{color:var(--text);background:rgba(47,129,247,.22);border-color:rgba(47,129,247,.6);box-shadow:0 0 0 1px rgba(47,129,247,.3)}
+.link{color:var(--text);text-decoration:none;transition:color .2s}
+.link:hover{color:var(--accent)}
 .muted{color:var(--muted)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.content-page{padding:24px;display:grid;gap:32px}
+.content-page h2{margin:0;font-size:22px}
+.content-page h3{margin:0;font-size:18px}
+.content-page p{margin:12px 0;color:var(--muted)}
+.content-page ul{margin:0;padding-left:20px;color:var(--muted);display:grid;gap:8px}
+.guide-steps{margin:0;padding-left:20px;color:var(--muted);display:grid;gap:8px}
+.guide-steps li{line-height:1.6}
+.faq-list{display:grid;gap:16px}
+.faq-list details{background:#0f1318;border:1px solid var(--border);border-radius:12px;padding:16px;transition:border-color .2s,box-shadow .2s}
+.faq-list details[open]{border-color:rgba(47,129,247,.45);box-shadow:0 18px 36px -28px rgba(47,129,247,.7)}
+.faq-list summary{cursor:pointer;font-weight:600;color:var(--text);outline:none}
+.faq-list summary::-webkit-details-marker{display:none}
+.faq-list details p{margin:12px 0 0;color:var(--muted)}
+.content-cta{background:#0f1318;border:1px dashed rgba(47,129,247,.45);border-radius:12px;padding:16px}
 .controls{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));padding:16px;border-bottom:1px solid var(--border)}
 .control label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
 .control .control-label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.04em}
@@ -56,6 +72,7 @@ select,input[type=time]{width:100%;padding:14px 16px;border-radius:14px;backgrou
 .time{font-feature-settings:"tnum" 1,"liga" 0;letter-spacing:.02em}
 .kicker{font-size:12px;color:var(--muted)}
 .footer{display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+.footer-links{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 
 /* Hero (次発を強調表示) */
 .hero{display:grid;place-items:center;text-align:center;border:1px solid var(--border);border-radius:14px;padding:18px;background:linear-gradient(180deg,rgba(47,129,247,.12),rgba(47,129,247,0));margin:8px 0 16px}

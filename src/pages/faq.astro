@@ -1,0 +1,128 @@
+---
+import "../styles/global.css";
+import Analytics from "../components/Analytics.astro";
+
+const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://sakaimachi-bus.amida-des.com';
+const base = import.meta.env.PUBLIC_BASE_PATH ?? '/';
+const siteUrl = new URL(base, site).toString();
+const canonicalUrl = new URL('faq/', siteUrl).toString();
+const sakaiToTokyoUrl = new URL('sakai-to-tokyo/', siteUrl).toString();
+const tokyoToSakaiUrl = new URL('tokyo-to-sakai/', siteUrl).toString();
+const guideUrl = new URL('guide/', siteUrl).toString();
+const title = "境町バス FAQ | よくある質問と回答";
+const description = "境町と東京（王子駅/東京駅）を結ぶ高速バスの利用に関するよくある質問をまとめました。ダイヤ・ホーム画面追加・遅延時の確認方法など。";
+const faqs = [
+  {
+    question: "平日と土日祝のダイヤは自動で切り替わりますか？",
+    answer: "端末の日時から自動判定します。祝日は土日祝扱いです。手動で時刻を調整したい場合は画面上部の現在時刻入力をご利用ください。"
+  },
+  {
+    question: "最新のダイヤに更新されるタイミングは？",
+    answer: "境町公式サイトの発表後に時刻表データを更新しています。リクエストがある場合はGitHubリポジトリのIssueからお知らせください。"
+  },
+  {
+    question: "ホーム画面に追加する方法は？",
+    answer: "iOSはSafariの共有メニューから\"ホーム画面に追加\"を、AndroidはChromeのメニューから\"ホーム画面に追加\"を選択してください。トップページのヒーローカードにも案内があります。"
+  },
+  {
+    question: "遅延情報は確認できますか？",
+    answer: "現在は公式サイトへのリンクをご案内しています。緊急時は境町公式SNSや各停留所の掲示をご確認ください。将来的にリアルタイム情報の連携を検討しています。"
+  },
+  {
+    question: "王子駅と東京駅どちらの到着時刻を基準にしていますか？",
+    answer: "境町発の便は王子駅・東京駅それぞれの到着予定時刻を表示します。東京発の便では出発停留所を切り替えて確認できます。"
+  }
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.answer
+    }
+  }))
+};
+
+const basePath = base === '/' ? '' : base.replace(/\/$/, '');
+const withBase = (slug: string) => {
+  const normalized = slug.startsWith('/') ? slug : `/${slug}`;
+  return `${basePath}${normalized}` || '/';
+};
+---
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="ja" href={siteUrl} />
+    <link rel="alternate" hreflang="ja" href={sakaiToTokyoUrl} />
+    <link rel="alternate" hreflang="ja" href={tokyoToSakaiUrl} />
+    <link rel="alternate" hreflang="ja" href={guideUrl} />
+    <link rel="prefetch" href={siteUrl} as="document" />
+    <link rel="prefetch" href={sakaiToTokyoUrl} as="document" />
+    <link rel="prefetch" href={tokyoToSakaiUrl} as="document" />
+    <link rel="prefetch" href={guideUrl} as="document" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="境町 ↔ 東京 高速バス ミニ" />
+    <meta property="og:image" content={`${siteUrl}og.png`} />
+    <meta property="og:image:alt" content="境町バス FAQ ページのOGP" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl}og.png`} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <Analytics />
+  </head>
+  <body>
+    <header class="container">
+      <h1>境町バス FAQ</h1>
+      <nav class="route-links" aria-label="主要ページ">
+        <a class="route-link" href={withBase('/')}>総合</a>
+        <a class="route-link" href={withBase('/sakai-to-tokyo/')}>境町 → 東京</a>
+        <a class="route-link" href={withBase('/tokyo-to-sakai/')}>東京 → 境町</a>
+        <a class="route-link is-active" href={withBase('/faq/')}>FAQ</a>
+        <a class="route-link" href={withBase('/guide/')}>乗車ガイド</a>
+      </nav>
+      <p class="muted">高速バスを初めて利用する方から寄せられる質問をまとめています。</p>
+    </header>
+    <main class="container card content-page">
+      <section>
+        <h2>よくある質問</h2>
+        <div class="faq-list">
+          {faqs.map((item) => (
+            <details>
+              <summary>{item.question}</summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+      <section class="content-cta">
+        <h3>関連リンク</h3>
+        <ul>
+          <li><a class="link" href={withBase('/guide/')}>境町バス乗車ガイド</a></li>
+          <li><a class="link" href="https://www.town.ibaraki-sakai.lg.jp/page/page002622.html" target="_blank" rel="noopener noreferrer">境町公式 高速バス案内</a></li>
+          <li><a class="link" href="https://www.town.ibaraki-sakai.lg.jp/" target="_blank" rel="noopener noreferrer">境町公式サイト</a></li>
+        </ul>
+      </section>
+    </main>
+    <footer class="container footer">
+      <span>© 2025 Amida Design · Sakaimachi Bus Mini</span>
+      <nav class="footer-links" aria-label="フッターリンク">
+        <a class="link" href={withBase('/')}>総合トップ</a>
+        <a class="link" href={withBase('/guide/')}>乗車ガイド</a>
+        <a class="link" href="https://github.com/ysatodat/Sakaimachi-Tokyo-Bus-App" target="_blank" rel="noreferrer">GitHub</a>
+      </nav>
+    </footer>
+  </body>
+</html>
