@@ -126,29 +126,32 @@ export default function TripRows({
     }
   }, [direction, nav, next, shareSupported, showHeroMessage, tokyoStop]);
 
+  const handleTripCopy = useCallback(async (trip:any) => {
+    const copiedText = direction === 'sakai_to_tokyo'
+      ? `境町 ${fmtHHmm(trip.dep)} 発 → 王子 ${fmtHHmm(trip.arr_oji)} ／ 東京 ${fmtHHmm(trip.arr_tokyo)}\n王子まで 約${trip.arr_oji.diff(trip.dep,'minute')}分 / 東京まで 約${trip.arr_tokyo.diff(trip.dep,'minute')}分`
+      : (() => {
+          const primaryDep = tokyoStop==='oji' ? trip.dep_oji : trip.dep_tokyo;
+          const boarding = tokyoStop==='oji' ? '王子駅' : '東京駅';
+          return `${boarding} ${fmtHHmm(primaryDep)} 発 → 境町 ${fmtHHmm(trip.arr_sakai)}\n${boarding}乗車で 約${trip.arr_sakai.diff(primaryDep,'minute')}分`;
+        })();
+
+    try {
+      if (nav?.clipboard && nav.clipboard.writeText) {
+        await nav.clipboard.writeText(copiedText);
+        showHeroMessage('便情報をコピーしました');
+        return;
+      }
+      showHeroMessage(copiedText);
+    } catch (error) {
+      showHeroMessage('コピーに失敗しました');
+    }
+  }, [direction, nav, showHeroMessage, tokyoStop]);
+
   const fmtHMRemain = (minutes:number) => {
     const h = Math.floor(minutes/60);
     const m = Math.max(0, minutes % 60);
     const pad = (n:number)=> n.toString().padStart(2,'0');
     return `${pad(h)}時間${pad(m)}分後`;
-  };
-
-  const Row = (t:any, label?:string) => {
-    if(!t) return <div className="kicker">本日の運行は終了しました。</div>;
-    const mins = minutesUntil(t.dep, now);
-    return (
-      <div className="tripRow">
-        <div>
-          {label && <div className="kicker">{label}</div>}
-          {direction==='sakai_to_tokyo' ? (
-            <div><span className="time">境町 {fmtHHmm(t.dep)}</span> 発 → <span className="time">王子 {fmtHHmm(t.arr_oji)}</span>／<span className="time">東京 {fmtHHmm(t.arr_tokyo)}</span></div>
-          ) : (
-            <div><span className="time">{tokyoStop==='oji'?'王子':'東京'} {fmtHHmm(t.dep)}</span> 発 → <span className="time">境町 {fmtHHmm(t.arr_sakai)}</span></div>
-          )}
-        </div>
-        <div className="badge badge--relative">{fmtHMRemain(mins)}</div>
-      </div>
-    );
   };
 
   return (
@@ -212,7 +215,53 @@ export default function TripRows({
         </div>
         <h2>以降</h2>
         <div id="upcoming">
-          {upcoming.length ? upcoming.map((t:any,i:number)=><div className="trip" key={i}>{Row(t)}</div>) : <div className="kicker">以降の便はありません。</div>}
+          {upcoming.length ? upcoming.map((t:any,i:number)=>{
+            const key = `${t.dep.valueOf()}-${i}`;
+            const mins = minutesUntil(t.dep, now);
+            const durationLabel = direction==='sakai_to_tokyo'
+              ? `王子まで 約${t.arr_oji.diff(t.dep,'minute')}分 ／ 東京まで 約${t.arr_tokyo.diff(t.dep,'minute')}分`
+              : `${tokyoStop==='oji'?'王子':'東京'}乗車で 境町まで 約${t.arr_sakai.diff(tokyoStop==='oji'?t.dep_oji:t.dep_tokyo,'minute')}分`;
+
+            return (
+              <details className="trip" key={key}>
+                <summary className="tripRow">
+                  <div className="tripRow__content">
+                    {direction==='sakai_to_tokyo' ? (
+                      <div><span className="time">境町 {fmtHHmm(t.dep)}</span> 発 → <span className="time">王子 {fmtHHmm(t.arr_oji)}</span>／<span className="time">東京 {fmtHHmm(t.arr_tokyo)}</span></div>
+                    ) : (
+                      <div><span className="time">{tokyoStop==='oji'?'王子':'東京'} {fmtHHmm(t.dep)}</span> 発 → <span className="time">境町 {fmtHHmm(t.arr_sakai)}</span></div>
+                    )}
+                    <div className="tripRow__hint">詳細を見る</div>
+                  </div>
+                  <div className="badge badge--relative">{fmtHMRemain(mins)}</div>
+                </summary>
+                <div className="trip-extra">
+                  <dl className="trip-meta">
+                    {direction==='sakai_to_tokyo' ? (
+                      <>
+                        <div><dt>境町 発</dt><dd>{fmtHHmm(t.dep)}</dd></div>
+                        <div><dt>王子 着</dt><dd>{fmtHHmm(t.arr_oji)}</dd></div>
+                        <div><dt>東京 着</dt><dd>{fmtHHmm(t.arr_tokyo)}</dd></div>
+                      </>
+                    ) : (
+                      <>
+                        <div><dt>東京駅 発</dt><dd>{fmtHHmm(t.dep_tokyo)}</dd></div>
+                        <div><dt>王子駅 発</dt><dd>{fmtHHmm(t.dep_oji)}</dd></div>
+                        <div><dt>境町 着</dt><dd>{fmtHHmm(t.arr_sakai)}</dd></div>
+                      </>
+                    )}
+                  </dl>
+                  <div className="trip-extra__footer">
+                    <span className="trip-extra__note">{durationLabel}</span>
+                    <button type="button" className="trip-action" onClick={()=>handleTripCopy(t)}>
+                      <span aria-hidden="true">📋</span>
+                      <span>この便をコピー</span>
+                    </button>
+                  </div>
+                </div>
+              </details>
+            );
+          }) : <div className="kicker">以降の便はありません。</div>}
         </div>
       </section>
     </div>
