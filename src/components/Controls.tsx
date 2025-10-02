@@ -8,14 +8,43 @@ type Props = {
   setNowValue: (v: string) => void;
 };
 export default function Controls({direction,setDirection,tokyoStop,setTokyoStop,nowValue,setNowValue}:Props){
+  const handleDirectionKey = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      setDirection('tokyo_to_sakai');
+    }
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      setDirection('sakai_to_tokyo');
+    }
+  };
+
   return (
     <section className="controls">
       <div className="control">
-        <label htmlFor="direction">方向</label>
-        <select id="direction" value={direction} onChange={e=>setDirection(e.target.value as Props['direction'])}>
-          <option value="sakai_to_tokyo">境町 → 東京（王子/東京）</option>
-          <option value="tokyo_to_sakai">東京（王子/東京） → 境町</option>
-        </select>
+        <p className="control-label" id="direction-label">方向</p>
+        <div className="segmented" role="radiogroup" aria-labelledby="direction-label" onKeyDown={handleDirectionKey}>
+          <button
+            type="button"
+            className={direction==='sakai_to_tokyo' ? 'segmented__option is-active' : 'segmented__option'}
+            role="radio"
+            aria-checked={direction==='sakai_to_tokyo'}
+            onClick={()=>setDirection('sakai_to_tokyo')}
+          >
+            <span className="segmented__eyebrow">境町 発</span>
+            <span className="segmented__label">境町 → 東京</span>
+          </button>
+          <button
+            type="button"
+            className={direction==='tokyo_to_sakai' ? 'segmented__option is-active' : 'segmented__option'}
+            role="radio"
+            aria-checked={direction==='tokyo_to_sakai'}
+            onClick={()=>setDirection('tokyo_to_sakai')}
+          >
+            <span className="segmented__eyebrow">東京 発</span>
+            <span className="segmented__label">東京 → 境町</span>
+          </button>
+        </div>
       </div>
       {direction==='tokyo_to_sakai' && (
         <div className="control">

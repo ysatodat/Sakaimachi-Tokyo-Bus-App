@@ -8,7 +8,15 @@ header h1{margin:16px 0 4px;font-weight:800;letter-spacing:.02em}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
 .controls{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));padding:16px;border-bottom:1px solid var(--border)}
 .control label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.control .control-label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.04em}
 select,input[type=time]{width:100%;padding:14px 16px;border-radius:14px;background:#0f1318;color:var(--text);border:1px solid var(--border);min-height:48px;font-size:16px;line-height:1.4}
+.segmented{display:grid;width:100%;grid-template-columns:repeat(auto-fit,minmax(164px,1fr));gap:8px;border:1px solid var(--border);background:#0f1318;border-radius:16px;padding:6px}
+.segmented__option{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:12px 14px;border-radius:12px;border:1px solid transparent;background:transparent;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.segmented__option:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.segmented__option .segmented__eyebrow{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(230,237,243,.72)}
+.segmented__option .segmented__label{font-size:15px;color:var(--text);font-weight:700}
+.segmented__option.is-active{background:rgba(47,129,247,.16);border-color:rgba(47,129,247,.4);color:var(--text);box-shadow:0 0 0 1px rgba(47,129,247,.25)}
+.segmented__option.is-active .segmented__eyebrow{color:#8fb7ff}
 .ghost{margin-top:8px;padding:10px 12px;background:transparent;color:var(--muted);border:1px dashed var(--border);border-radius:10px;cursor:pointer;min-height:44px}
 .summary{display:flex;gap:8px;flex-wrap:wrap;padding:16px}
 .chip{display:flex;align-items:center;gap:8px;background:rgba(154,167,179,.12);border:none;padding:8px 12px;border-radius:10px;font-size:12px;color:var(--muted);cursor:default;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
