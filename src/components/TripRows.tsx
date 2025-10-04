@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
 import { fmtHHmm, minutesUntil, parseHHmm, now as nowFn, ZONE } from '../lib/time';
+import { trackEvent } from '../lib/analytics';
 
 type STT =
   | { dep: string, arr_oji: string, arr_tokyo: string } // 既存フォーマット互換
@@ -119,20 +120,25 @@ export default function TripRows({
       if (shareSupported && nav?.share) {
         await nav.share({ title: shareTitle, text: shareText, url: shareUrl });
         showHeroMessage('共有メニューを開きました');
+        trackEvent('share_invoke', { method: 'navigator_share', direction });
         return;
       }
       if (nav?.clipboard && nav.clipboard.writeText) {
         await nav.clipboard.writeText(shareUrl);
         showHeroMessage('リンクをコピーしました');
+        trackEvent('share_invoke', { method: 'clipboard', direction });
         return;
       }
       showHeroMessage(`URL: ${shareUrl}`);
+      trackEvent('share_invoke', { method: 'fallback', direction });
     } catch (error) {
       if ((error as DOMException)?.name === 'AbortError') {
         showHeroMessage('共有をキャンセルしました');
+        trackEvent('share_invoke', { method: 'cancel', direction });
         return;
       }
       showHeroMessage('共有に失敗しました');
+      trackEvent('share_error', { direction });
     }
   }, [direction, next, shareSupported, showHeroMessage, tokyoStop]);
 
@@ -150,11 +156,14 @@ export default function TripRows({
       if (nav?.clipboard && nav.clipboard.writeText) {
         await nav.clipboard.writeText(copiedText);
         showHeroMessage('便情報をコピーしました');
+        trackEvent('trip_copy', { direction });
         return;
       }
       showHeroMessage(copiedText);
+      trackEvent('trip_copy', { direction, fallback: true });
     } catch (error) {
       showHeroMessage('コピーに失敗しました');
+      trackEvent('trip_copy_error', { direction });
     }
   }, [direction, showHeroMessage, tokyoStop]);
 
@@ -206,7 +215,13 @@ export default function TripRows({
             <button
               type="button"
               className={showA2hs ? 'hero-action is-active' : 'hero-action'}
-              onClick={()=>setShowA2hs((v)=>!v)}
+              onClick={()=>{
+                setShowA2hs((v)=>{
+                  const nextState = !v;
+                  trackEvent('a2hs_toggle', { open: nextState });
+                  return nextState;
+                });
+              }}
               aria-expanded={showA2hs}
               aria-pressed={showA2hs}
             >

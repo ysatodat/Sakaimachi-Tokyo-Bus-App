@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import Controls from './Controls';
 import TripRows from './TripRows';
 import data from '../data/timetable.sample.json';
+import { trackEvent } from '../lib/analytics';
 
 type AppProps = {
   initialNowIso: string;
@@ -97,6 +98,7 @@ export default function App({
               href={link.href}
               target={link.external ? '_blank' : undefined}
               rel={link.external ? 'noopener noreferrer' : undefined}
+              onClick={()=>trackEvent('quick_link_click', { title: link.title, external: !!link.external })}
             >
               <span className="quick-link__title">{link.title}</span>
               <span className="quick-link__desc">{link.description}</span>
