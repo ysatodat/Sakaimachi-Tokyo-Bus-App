@@ -24,6 +24,8 @@ export default function TripRows({
   const [tick, setTick] = useState(0);
   const [showA2hs, setShowA2hs] = useState(false);
   const [heroMessage, setHeroMessage] = useState('');
+  const [shareSupported, setShareSupported] = useState(false);
+  const [clipboardSupported, setClipboardSupported] = useState(false);
   const messageTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -38,6 +40,16 @@ export default function TripRows({
   useEffect(() => {
     const id = setInterval(() => setTick((t) => t + 1), 1000);
     return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    if (typeof navigator === 'undefined') {
+      setShareSupported(false);
+      setClipboardSupported(false);
+      return;
+    }
+    setShareSupported('share' in navigator);
+    setClipboardSupported(!!navigator.clipboard?.writeText);
   }, []);
 
   const showHeroMessage = useCallback((text: string) => {
@@ -89,10 +101,8 @@ export default function TripRows({
   const last  = parsed[parsed.length-1];
   const next  = parsed.find((t:any)=>t.dep.isAfter(now));
   const upcoming = parsed.filter((t:any)=>t.dep.isAfter(now)).slice(1,5);
-  const nav = typeof navigator !== 'undefined' ? navigator : undefined;
-  const shareSupported = !!(nav && 'share' in nav);
-
   const handleShare = useCallback(async () => {
+    const nav = typeof navigator !== 'undefined' ? navigator : undefined;
     const shareUrl = typeof window !== 'undefined' ? window.location.href : 'https://sakaimachi-bus.amida-des.com/';
     const shareTitle = '境町 ↔ 東京 高速バス';
     const shareText = (() => {
@@ -124,9 +134,10 @@ export default function TripRows({
       }
       showHeroMessage('共有に失敗しました');
     }
-  }, [direction, nav, next, shareSupported, showHeroMessage, tokyoStop]);
+  }, [direction, next, shareSupported, showHeroMessage, tokyoStop]);
 
   const handleTripCopy = useCallback(async (trip:any) => {
+    const nav = typeof navigator !== 'undefined' ? navigator : undefined;
     const copiedText = direction === 'sakai_to_tokyo'
       ? `境町 ${fmtHHmm(trip.dep)} 発 → 王子 ${fmtHHmm(trip.arr_oji)} ／ 東京 ${fmtHHmm(trip.arr_tokyo)}\n王子まで 約${trip.arr_oji.diff(trip.dep,'minute')}分 / 東京まで 約${trip.arr_tokyo.diff(trip.dep,'minute')}分`
       : (() => {
@@ -145,7 +156,7 @@ export default function TripRows({
     } catch (error) {
       showHeroMessage('コピーに失敗しました');
     }
-  }, [direction, nav, showHeroMessage, tokyoStop]);
+  }, [direction, showHeroMessage, tokyoStop]);
 
   const fmtHMRemain = (minutes:number) => {
     const h = Math.floor(minutes/60);
@@ -190,7 +201,7 @@ export default function TripRows({
           <div className="hero-actions" aria-label="クイックアクション">
             <button type="button" className="hero-action" onClick={handleShare}>
               <span aria-hidden="true">↗</span>
-              <span>{shareSupported ? '共有する' : 'リンクをコピー'}</span>
+              <span>{shareSupported ? '共有する' : clipboardSupported ? 'リンクをコピー' : 'URLを表示'}</span>
             </button>
             <button
               type="button"
