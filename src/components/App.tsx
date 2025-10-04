@@ -66,6 +66,44 @@ export default function App({
           nowValue={nowValue}
           initialNowIso={initialNowIso}
         />
+        <section className="quick-links" aria-label="よく使う導線">
+          {[
+            {
+              title: '料金・支払い',
+              description: '運賃表と支払い方法を確認',
+              href: withBasePath('/guide/#fares')
+            },
+            {
+              title: 'よくある質問',
+              description: '初めて利用する方向けのFAQ',
+              href: withBasePath('/faq/')
+            },
+            {
+              title: '乗換案内',
+              description: '主要駅までの経路を検索',
+              href: 'https://transit.yahoo.co.jp/',
+              external: true
+            },
+            {
+              title: '運行状況・遅延',
+              description: '境町公式ページで最新情報を確認',
+              href: 'https://www.town.ibaraki-sakai.lg.jp/page/page002622.html',
+              external: true
+            }
+          ].map((link)=> (
+            <a
+              key={link.title}
+              className="quick-link"
+              href={link.href}
+              target={link.external ? '_blank' : undefined}
+              rel={link.external ? 'noopener noreferrer' : undefined}
+            >
+              <span className="quick-link__title">{link.title}</span>
+              <span className="quick-link__desc">{link.description}</span>
+              <span className="quick-link__icon" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </section>
         <section className="footer-note">
           <p className="muted">
             本アプリの時刻表は <a href="https://www.town.ibaraki-sakai.lg.jp/page/page002622.html" target="_blank" rel="noopener noreferrer">境町公式サイト掲載の時刻表</a>（令和6年4月1日改定）をもとに作成しています。<br />
@@ -78,6 +116,7 @@ export default function App({
         <nav className="footer-links" aria-label="補足ページ">
           <a className="link" href={withBasePath('/faq/')}>FAQ</a>
           <a className="link" href={withBasePath('/guide/')}>乗車ガイド</a>
+          <a className="link" href="https://github.com/ysatodat/Sakaimachi-Tokyo-Bus-App/issues/new?template=bug_report.yml" target="_blank" rel="noopener noreferrer">ご意見・不具合の報告</a>
           <a href="https://amida-des.com/" className="link" target="_blank" rel="noreferrer">Amida Design</a>
           <a href="https://github.com/ysatodat/Sakaimachi-Tokyo-Bus-App" className="link" target="_blank" rel="noreferrer">GitHub</a>
         </nav>
