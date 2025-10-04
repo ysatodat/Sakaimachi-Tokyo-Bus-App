@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Product Vision & Roadmap
+    url: https://github.com/ysatodat/Sakaimachi-Tokyo-Bus-App/blob/main/FUTURE_VISION.md
+    about: Review the long-term strategy before proposing large changes.
+  - name: Task Backlog
+    url: https://github.com/ysatodat/Sakaimachi-Tokyo-Bus-App/blob/main/ROADMAP.md
+    about: Pick tasks from the prioritized backlog when creating roadmap issues.

@@ -1,0 +1,61 @@
+name: Roadmap Task
+description: Create an issue derived from FUTURE_VISION.md / ROADMAP.md.
+title: "[Roadmap] "
+labels: ["roadmap"]
+body:
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase
+      description: Select the time horizon that best matches this task.
+      options:
+        - Immediate (〜1か月)
+        - Next (1〜3か月)
+        - Later (3〜6か月)
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area / Domain
+      description: Which focus area does this task belong to?
+      options:
+        - UX / UI
+        - Performance / Accessibility
+        - SEO / Content
+        - PWA / Offline
+        - Data / CMS
+        - Analytics / Ops
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Summarize the outcome and key user value.
+      placeholder: >-
+        e.g. "Add quick links below hero for fares and transfer guidance"
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Acceptance Criteria
+      description: List concrete requirements. Refer to FUTURE_VISION.md or ROADMAP.md as needed.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Success Metrics / KPIs
+      description: How will we know this task delivered value?
+      placeholder: >-
+        e.g. "Increases GA4 event `quick_links_click` by 20%"
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / Dependencies
+      description: Add related issues, links to design docs, or required approvals.
