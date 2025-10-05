@@ -9,6 +9,7 @@
 | 2 | ✅ Feedbackフォーム/リンクの追加 | フッターに不具合報告・改善要望フォーム（GitHub Issue テンプレ）を設置 | `ux`, `ops` | 今月内 |
 | 3 | ✅ 色覚コントラスト監査＆配色調整 | DevTools で確認し、アクセントカラーをコントラスト比 4.5:1 以上となる値に調整 | `a11y`, `design` | 今月内 |
 | 4 | ✅ GA4/GTM Measurement ID 設定と主要導線イベント計測 | envでID管理し、方向切替/共有/FAQ遷移などを `trackEvent` で送信できるよう整備 | `analytics`, `ops`, `short-term` | 今月内 |
+| 5 | ✅ UX: ホーム追加時にも方向/停留所を保持 | localStorage などでユーザーの前回選択を保存し、PWA起動時も反映する | `ux`, `frontend`, `short-term` | 今月内 |
 
 ## 2. Next (1〜3か月)
 | # | Issue タイトル案 | 説明 | ラベル | 期限目安 |

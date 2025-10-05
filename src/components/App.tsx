@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Controls from './Controls';
 import TripRows from './TripRows';
 import data from '../data/timetable.sample.json';
@@ -34,6 +34,39 @@ export default function App({
     ? (routes.find(r=>r.id==='sakai_to_tokyo')?.trips ?? [])
     : (routes.find(r=>r.id==='tokyo_to_sakai')?.trips ?? [])
   ,[direction]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('sbm:user-preferences');
+      if (!stored) return;
+      const prefs = JSON.parse(stored);
+      if (prefs.direction === 'sakai_to_tokyo' || prefs.direction === 'tokyo_to_sakai') {
+        setDirection(prefs.direction);
+      }
+      if (prefs.tokyoStop === 'oji' || prefs.tokyoStop === 'tokyo') {
+        setTokyoStop(prefs.tokyoStop);
+      }
+      if (typeof prefs.nowValue === 'string') {
+        setNowValue(prefs.nowValue);
+      }
+    } catch (error) {
+      console.warn('[prefs] failed to load', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const payload = {
+      direction,
+      tokyoStop,
+      nowValue
+    };
+    try {
+      localStorage.setItem('sbm:user-preferences', JSON.stringify(payload));
+    } catch (error) {
+      console.warn('[prefs] failed to persist', error);
+    }
+  }, [direction, tokyoStop, nowValue]);
 
   const note = (data as any).calendar?.note ?? '';
 
