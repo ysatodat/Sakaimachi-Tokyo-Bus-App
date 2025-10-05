@@ -41,6 +41,7 @@ jobs:
         env:
           PUBLIC_SITE_URL: https://ysatodat.github.io
           PUBLIC_BASE_PATH: /Sakaimachi-Tokyo-Bus-App/
+          PUBLIC_GOOGLE_TAG_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_ID }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
