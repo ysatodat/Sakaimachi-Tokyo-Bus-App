@@ -26,8 +26,6 @@
   </g>
 
   <text x="640" y="410" font-family="'Inter','Noto Sans JP',sans-serif" font-size="24" fill="#5c6370">ホーム追加＆オフライン対応の軽量ビュー</text>
-  <text x="600" y="468" text-anchor="middle" font-family="'Inter','Noto Sans JP',sans-serif" font-size="30" font-weight="600" fill="#1b1e29">https://sakaimachi-bus.amida-des.com/</text>
-
   <circle cx="1010" cy="200" r="28" fill="#1f5bff" opacity="0.15" />
   <circle cx="980" cy="170" r="18" fill="#1f5bff" opacity="0.1" />
 </svg>
