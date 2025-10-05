@@ -8,7 +8,12 @@ if (!gtagId && !gtmId) {
 {gtagId && (
   <>
     <script async src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}></script>
-    <script set:html={`window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${gtagId}');`} />
+    <script set:html={`
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${gtagId}');
+    `} />
   </>
 )}
 {!gtagId && gtmId && (
