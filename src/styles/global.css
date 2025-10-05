@@ -9,6 +9,7 @@
   --chip:#e5eeff;
   --accent:#1f5bff;
   --accent-soft:#e3ecff;
+  --select-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%231f5bff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M3 5l3 3 3-3'/%3E%3C/svg%3E");
   --positive:#1a9d5a;
   --critical:#e5484d;
 }
@@ -39,10 +40,10 @@ header h1{margin:16px 0 12px;font-weight:700;letter-spacing:.01em;color:var(--te
 .faq-list summary::-webkit-details-marker{display:none}
 .faq-list details p{margin:12px 0 0;color:var(--muted)}
 .content-cta{background:#fff;border:1px dashed rgba(31,91,255,.35);border-radius:16px;padding:16px}
-.controls{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));padding:16px;border-bottom:1px solid var(--border)}
-.control label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-.control .control-label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.04em}
-select,input[type=time]{width:100%;padding:14px 16px;padding-right:40px;border-radius:14px;background:#fff;color:var(--text);border:1px solid var(--border);min-height:48px;font-size:16px;line-height:1.4;transition:border-color .2s,box-shadow .2s}
+.controls{display:grid;gap:12px 16px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));padding:16px;border-bottom:1px solid var(--border);align-items:start}
+.control label,.control .control-label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weight:600;letter-spacing:.02em}
+select,input[type=time]{width:100%;padding:14px 16px;border-radius:14px;background:#fff;color:var(--text);border:1px solid var(--border);min-height:48px;font-size:16px;line-height:1.4;transition:border-color .2s,box-shadow .2s}
+select{appearance:none;background-image:var(--select-icon);background-repeat:no-repeat;background-position:right 14px center;background-size:12px;padding-right:44px}
 select:focus,input[type=time]:focus{border-color:rgba(31,91,255,.6);box-shadow:0 0 0 3px rgba(31,91,255,.18);outline:none}
 .segmented{display:grid;width:100%;grid-template-columns:repeat(auto-fit,minmax(164px,1fr));gap:8px;border:1px solid var(--border);background:#fff;border-radius:16px;padding:6px}
 .segmented__option{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:12px 14px;border-radius:12px;border:1px solid transparent;background:transparent;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
