@@ -36,6 +36,7 @@ export default function App({
   ,[direction]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     try {
       const stored = localStorage.getItem('sbm:user-preferences');
       if (!stored) return;
@@ -51,6 +52,12 @@ export default function App({
       }
     } catch (error) {
       console.warn('[prefs] failed to load', error);
+    }
+    if (!localStorage.getItem('sbm:user-preferences')) {
+      const current = new Date();
+      const hh = current.getHours().toString().padStart(2, '0');
+      const mm = current.getMinutes().toString().padStart(2, '0');
+      setNowValue(`${hh}:${mm}`);
     }
   }, []);
 

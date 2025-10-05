@@ -107,6 +107,7 @@ select:focus,input[type=time]:focus{border-color:rgba(31,91,255,.6);box-shadow:0
 .hero-time{font-size:clamp(44px,10vw,72px);font-weight:700;letter-spacing:.01em;color:var(--text)}
 .countdown{margin-top:8px;color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.04em}
 .hero-sub{margin-top:14px;color:var(--text);font-size:16px}
+.hero-heading{margin:0 0 8px;font-size:14px;color:var(--muted);letter-spacing:.04em}
 .hero-actions{margin-top:20px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
 .hero-action{display:flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;border:1px solid rgba(31,91,255,.3);background:rgba(31,91,255,.1);color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;transition:background .2s,border-color .2s,transform .2s,color .2s}
 .hero-action span[aria-hidden="true"]{font-size:14px;line-height:1}

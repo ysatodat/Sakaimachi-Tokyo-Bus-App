@@ -67,15 +67,18 @@ export default function Controls({direction,setDirection,tokyoStop,setTokyoStop,
         </div>
       )}
       <div className="control">
-        <label htmlFor="now">現在時刻（調整用）</label>
+        <label htmlFor="now">表示基準時刻</label>
         <input id="now" type="time" value={nowValue} onChange={e=>{
           setNowValue(e.target.value);
           trackEvent('manual_time_set');
         }} />
         <button className="ghost" onClick={()=>{
-          setNowValue('');
+          const current = new Date();
+          const hh = current.getHours().toString().padStart(2, '0');
+          const mm = current.getMinutes().toString().padStart(2, '0');
+          setNowValue(`${hh}:${mm}`);
           trackEvent('manual_time_reset');
-        }}>現在時刻に戻す</button>
+        }}>現在時刻に合わせる</button>
       </div>
     </section>
   );

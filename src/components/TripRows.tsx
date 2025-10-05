@@ -185,6 +185,7 @@ export default function TripRows({
         <h2 className="sr-only">次発</h2>
         {/* ヒーローカード（アクティブ・カセット） */}
         <div className="hero">
+          <h3 className="hero-heading">次に出発する便</h3>
           {!next ? (
             <div className="kicker">本日の運行は終了しました。</div>
           ) : (
