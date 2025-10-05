@@ -1,0 +1,26 @@
+name: Quality Checks
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lighthouse-pa11y:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci --no-audit --prefer-online || npm install --no-audit --prefer-online --package-lock=false
+      - run: npm run build
+      - name: Lighthouse
+        run: npx @lhci/cli@0.11.0 autorun --config=./lighthouserc.json
+      - name: Start static server
+        run: npx http-server@14 dist -p 4173 &
+      - run: sleep 2
+      - name: Pa11y CI
+        run: npx pa11y-ci@3.1.0 --config .pa11yci.json
+      - name: Kill static server
+        run: |
+          pkill http-server || true

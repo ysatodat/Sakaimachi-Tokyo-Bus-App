@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 import App from "../components/App.tsx";
-import timetable from "../data/timetable.sample.json";
+import { loadTimetable } from "../lib/loadTimetable";
 import Analytics from "../components/Analytics.astro";
 
 // ✅ 本番URLは環境変数で切替（既定は独自ドメイン）
@@ -40,7 +40,8 @@ const normaliseTime = (value: string | { weekday?: string; holiday?: string }) =
     ? value
     : (value?.weekday ?? value?.holiday ?? "");
 
-const routes = (timetable as any)?.routes ?? [];
+const timetable = await loadTimetable();
+const routes = (timetable)?.routes ?? [];
 
 const schemaWebApp = {
   "@context": "https://schema.org",
@@ -121,6 +122,8 @@ const routeSchemas = routes.map((route: any) => {
 
 const jsonLd = [schemaWebApp, ...routeSchemas];
 const initialNowIso = new Date().toISOString();
+const manifestUrl = new URL('manifest.webmanifest', siteUrl).toString();
+const serviceWorkerUrl = new URL('sw.js', siteUrl).toString();
 ---
 <html lang="ja">
   <head>
@@ -144,6 +147,7 @@ const initialNowIso = new Date().toISOString();
     <link rel="prefetch" href={guideUrl} as="document" />
     <link rel="icon" href={favIcon} type="image/svg+xml" />
     <link rel="apple-touch-icon" sizes="180x180" href={appleIcon} />
+    <link rel="manifest" href={manifestUrl} />
 
     <!-- ✅ OGP -->
     <meta property="og:type" content="website" />
@@ -172,8 +176,15 @@ const initialNowIso = new Date().toISOString();
     <!-- JSON-LD（既存） -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <Analytics />
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('{serviceWorkerUrl}').catch(() => {});
+        });
+      }
+    </script>
   </head>
   <body>
-    <App client:load initialNowIso={initialNowIso} />
+    <App client:load initialNowIso={initialNowIso} timetable={timetable} />
   </body>
 </html>

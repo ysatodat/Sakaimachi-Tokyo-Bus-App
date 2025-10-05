@@ -1,0 +1,22 @@
+{
+  "name": "境町 ↔ 東京 高速バス ミニ",
+  "short_name": "境町バス",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f5bff",
+  "description": "境町と東京を結ぶ高速バスの時刻・次発情報を素早くチェック",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

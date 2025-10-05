@@ -1,0 +1,14 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "timeout": 60000,
+    "wait": 1000
+  },
+  "urls": [
+    "http://127.0.0.1:4173/",
+    "http://127.0.0.1:4173/sakai-to-tokyo/",
+    "http://127.0.0.1:4173/tokyo-to-sakai/",
+    "http://127.0.0.1:4173/guide/",
+    "http://127.0.0.1:4173/faq/"
+  ]
+}

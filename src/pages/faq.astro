@@ -11,10 +11,13 @@ const tokyoToSakaiUrl = new URL('tokyo-to-sakai/', siteUrl).toString();
 const guideUrl = new URL('guide/', siteUrl).toString();
 const title = "境町バス FAQ | よくある質問と回答";
 const description = "境町と東京（王子駅/東京駅）を結ぶ高速バスの利用に関するよくある質問をまとめました。ダイヤ・ホーム画面追加・遅延時の確認方法など。";
+const manifestUrl = new URL('manifest.webmanifest', siteUrl).toString();
+const serviceWorkerUrl = new URL('sw.js', siteUrl).toString();
+
 const faqs = [
   {
     question: "平日と土日祝のダイヤは自動で切り替わりますか？",
-    answer: "端末の日時から自動判定します。祝日は土日祝扱いです。手動で時刻を調整したい場合は画面上部の現在時刻入力をご利用ください。"
+    answer: "端末の日時から自動判定します。祝日は土日祝扱いです。手動で時刻を調整したい場合は画面上部の表示基準時刻で設定してください。"
   },
   {
     question: "最新のダイヤに更新されるタイミングは？",
@@ -22,7 +25,7 @@ const faqs = [
   },
   {
     question: "ホーム画面に追加する方法は？",
-    answer: "iOSはSafariの共有メニューから\"ホーム画面に追加\"を、AndroidはChromeのメニューから\"ホーム画面に追加\"を選択してください。トップページのヒーローカードにも案内があります。"
+    answer: "iOSはSafariの共有メニューから\"ホーム画面に追加\"を、AndroidはChromeのメニューから\"ホーム画面に追加\"を選択してください。アプリ版では前回の方向設定を自動で復元します。"
   },
   {
     question: "遅延情報は確認できますか？",
@@ -65,6 +68,7 @@ const withBase = (slug: string) => {
     <link rel="alternate" hreflang="ja" href={sakaiToTokyoUrl} />
     <link rel="alternate" hreflang="ja" href={tokyoToSakaiUrl} />
     <link rel="alternate" hreflang="ja" href={guideUrl} />
+    <link rel="manifest" href={manifestUrl} />
     <meta property="og:type" content="article" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -82,6 +86,13 @@ const withBase = (slug: string) => {
     <link rel="prefetch" href={tokyoToSakaiUrl} as="document" />
     <link rel="prefetch" href={guideUrl} as="document" />
     <Analytics />
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('{serviceWorkerUrl}').catch(() => {});
+        });
+      }
+    </script>
   </head>
   <body>
     <header class="container">
