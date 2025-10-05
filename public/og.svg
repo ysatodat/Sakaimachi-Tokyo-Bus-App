@@ -8,7 +8,7 @@
   <rect width="1200" height="630" rx="36" fill="url(#bg)" />
 
   <rect x="100" y="110" width="1000" height="410" rx="32" fill="#ffffff" stroke="#d7dee7" stroke-width="2" />
-  <rect x="100" y="110" width="1000" height="90" rx="32" fill="#1f5bff" />
+  <rect x="100" y="110" width="1000" height="90" rx="32" fill="#1d59fd" />
   <text x="600" y="170" text-anchor="middle" font-family="'Inter','Noto Sans JP',sans-serif" font-size="40" font-weight="700" fill="#ffffff">境町 ↔ 東京 高速バス ミニ</text>
 
   <g font-family="'Inter','Noto Sans JP',sans-serif" fill="#1b1e29" font-weight="600">
@@ -16,16 +16,16 @@
   </g>
 
   <rect x="140" y="250" width="440" height="220" rx="24" fill="#f5f7fa" />
-  <text x="360" y="310" text-anchor="middle" font-family="'Inter','Noto Sans JP',sans-serif" font-size="28" font-weight="600" fill="#1f5bff">次の便まで</text>
+  <text x="360" y="310" text-anchor="middle" font-family="'Inter','Noto Sans JP',sans-serif" font-size="28" font-weight="600" fill="#1d59fd">次の便まで</text>
   <text x="360" y="384" text-anchor="middle" font-family="'Inter','Noto Sans JP',sans-serif" font-size="92" font-weight="700" fill="#1b1e29">00:12:34</text>
   <text x="360" y="430" text-anchor="middle" font-family="'Inter','Noto Sans JP',sans-serif" font-size="26" fill="#5c6370">境町 07:10 ▶ 東京 08:40</text>
 
-  <g font-family="'Inter','Noto Sans JP',sans-serif" font-size="26" font-weight="600" fill="#1f5bff">
+  <g font-family="'Inter','Noto Sans JP',sans-serif" font-size="26" font-weight="600" fill="#1d59fd">
     <text x="640" y="310">▶ 境町 → 東京（王子/東京）</text>
     <text x="640" y="360">▶ 東京 → 境町</text>
   </g>
 
   <text x="640" y="410" font-family="'Inter','Noto Sans JP',sans-serif" font-size="24" fill="#5c6370">ホーム追加＆オフライン対応の軽量ビュー</text>
-  <circle cx="1010" cy="200" r="28" fill="#1f5bff" opacity="0.15" />
-  <circle cx="980" cy="170" r="18" fill="#1f5bff" opacity="0.1" />
+  <circle cx="1010" cy="200" r="28" fill="#1d59fd" opacity="0.15" />
+  <circle cx="980" cy="170" r="18" fill="#1d59fd" opacity="0.1" />
 </svg>
