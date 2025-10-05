@@ -1,20 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#f5f7fa" />
-  <rect x="0" y="120" width="340" height="390" rx="24" fill="#1f5bff" />
-  <rect x="60" y="180" width="220" height="220" rx="32" fill="#fff" opacity="0.1" />
-  <rect x="90" y="210" width="160" height="160" rx="24" fill="#fff" opacity="0.15" />
+  <rect x="0" y="90" width="420" height="450" rx="32" fill="#1f5bff" />
+  <rect x="80" y="200" width="260" height="260" rx="36" fill="#ffffff" opacity="0.08" />
+  <rect x="120" y="240" width="180" height="180" rx="26" fill="#ffffff" opacity="0.14" />
 
   <g font-family="'Inter', 'Noto Sans JP', sans-serif" font-weight="600" fill="#1b1e29">
-    <text x="420" y="220" font-size="54">境町 ↔ 東京 高速バス ミニ</text>
-    <text x="420" y="300" font-size="32" fill="#5c6370">次発・以降の便をリアルタイムで確認</text>
-    <text x="420" y="360" font-size="24" fill="#1f5bff">▶ 境町 → 東京（王子/東京）</text>
-    <text x="420" y="400" font-size="24" fill="#1f5bff">▶ 東京 → 境町</text>
-    <text x="420" y="460" font-size="26">https://sakaimachi-bus.amida-des.com/</text>
+    <text x="440" y="220" font-size="52">境町 ↔ 東京 高速バス ミニ</text>
+    <text x="440" y="296" font-size="30" fill="#5c6370">次発・以降の便をリアルタイムで確認</text>
+    <text x="440" y="352" font-size="24" fill="#1f5bff">▶ 境町 → 東京（王子/東京）</text>
+    <text x="440" y="392" font-size="24" fill="#1f5bff">▶ 東京 → 境町</text>
+    <text x="440" y="456" font-size="26">https://sakaimachi-bus.amida-des.com/</text>
   </g>
 
-  <g font-family="'Inter', 'Noto Sans JP', sans-serif" fill="#ffffff" font-weight="600">
-    <text x="60" y="260" font-size="46">次の便まで</text>
-    <text x="60" y="340" font-size="80">00:12:34</text>
-    <text x="60" y="400" font-size="24" opacity="0.85">境町 07:10 ▶ 東京 08:40</text>
+  <g font-family="'Inter', 'Noto Sans JP', sans-serif" fill="#ffffff" font-weight="600" text-anchor="middle">
+    <text x="210" y="250" font-size="46">次の便まで</text>
+    <text x="210" y="336" font-size="84">00:12:34</text>
+    <text x="210" y="392" font-size="26" opacity="0.9">境町 07:10 ▶ 東京 08:40</text>
   </g>
 </svg>
