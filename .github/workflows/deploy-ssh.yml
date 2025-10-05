@@ -25,6 +25,8 @@ jobs:
           || npm install --no-audit --prefer-online --package-lock=false
 
       - run: npm run build
+        env:
+          PUBLIC_GOOGLE_TAG_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_ID }}
 
       - name: Deploy via rsync over SSH
         uses: easingthemes/ssh-deploy@v5.0.3

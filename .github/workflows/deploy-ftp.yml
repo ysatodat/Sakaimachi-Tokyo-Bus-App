@@ -65,6 +65,7 @@ jobs:
         env:
           PUBLIC_SITE_URL: ${{ secrets.PUBLIC_SITE_URL || 'https://sakaimachi-bus.amida-des.com' }}
           PUBLIC_BASE_PATH: ${{ secrets.PUBLIC_BASE_PATH || '/' }}
+          PUBLIC_GOOGLE_TAG_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_ID }}
         run: npm run build
 
       - name: Normalize server directory
