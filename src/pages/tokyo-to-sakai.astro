@@ -101,7 +101,7 @@ const sakaiToTokyoUrl = new URL('sakai-to-tokyo/', siteUrl).toString();
 const faqUrl = new URL('faq/', siteUrl).toString();
 const guideUrl = new URL('guide/', siteUrl).toString();
 const manifestUrl = new URL('manifest.webmanifest', siteUrl).toString();
-const serviceWorkerUrl = new URL('sw.js', siteUrl).toString();
+const serviceWorkerPath = new URL('sw.js', siteUrl).pathname;
 ---
 <html lang="ja">
   <head>
@@ -147,7 +147,7 @@ const serviceWorkerUrl = new URL('sw.js', siteUrl).toString();
     <script is:inline>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('{serviceWorkerUrl}').catch(() => {});
+          navigator.serviceWorker.register('{serviceWorkerPath}').catch(() => {});
         });
       }
     </script>

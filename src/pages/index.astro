@@ -123,7 +123,7 @@ const routeSchemas = routes.map((route: any) => {
 const jsonLd = [schemaWebApp, ...routeSchemas];
 const initialNowIso = new Date().toISOString();
 const manifestUrl = new URL('manifest.webmanifest', siteUrl).toString();
-const serviceWorkerUrl = new URL('sw.js', siteUrl).toString();
+const serviceWorkerPath = new URL('sw.js', siteUrl).pathname;
 ---
 <html lang="ja">
   <head>
@@ -179,7 +179,7 @@ const serviceWorkerUrl = new URL('sw.js', siteUrl).toString();
     <script is:inline>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('{serviceWorkerUrl}').catch(() => {});
+          navigator.serviceWorker.register('{serviceWorkerPath}').catch(() => {});
         });
       }
     </script>

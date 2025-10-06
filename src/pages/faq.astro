@@ -12,7 +12,7 @@ const guideUrl = new URL('guide/', siteUrl).toString();
 const title = "境町バス FAQ | よくある質問と回答";
 const description = "境町と東京（王子駅/東京駅）を結ぶ高速バスの利用に関するよくある質問をまとめました。ダイヤ・ホーム画面追加・遅延時の確認方法など。";
 const manifestUrl = new URL('manifest.webmanifest', siteUrl).toString();
-const serviceWorkerUrl = new URL('sw.js', siteUrl).toString();
+const serviceWorkerPath = new URL('sw.js', siteUrl).pathname;
 
 const faqs = [
   {
@@ -89,7 +89,7 @@ const withBase = (slug: string) => {
     <script is:inline>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('{serviceWorkerUrl}').catch(() => {});
+          navigator.serviceWorker.register('{serviceWorkerPath}').catch(() => {});
         });
       }
     </script>

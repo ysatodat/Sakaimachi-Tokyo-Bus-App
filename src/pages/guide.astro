@@ -12,7 +12,7 @@ const faqUrl = new URL('faq/', siteUrl).toString();
 const title = "境町バス乗車ガイド | 乗り場・支払い・乗車の流れ";
 const description = "境町と王子駅・東京駅を結ぶ高速バスの乗り場アクセス、支払い方法、乗車までの流れを写真付きで整理しました。";
 const manifestUrl = new URL('manifest.webmanifest', siteUrl).toString();
-const serviceWorkerUrl = new URL('sw.js', siteUrl).toString();
+const serviceWorkerPath = new URL('sw.js', siteUrl).pathname;
 
 const howToSchema = {
   "@context": "https://schema.org",
@@ -92,7 +92,7 @@ const withBase = (slug: string) => {
     <script is:inline>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('{serviceWorkerUrl}').catch(() => {});
+          navigator.serviceWorker.register('{serviceWorkerPath}').catch(() => {});
         });
       }
     </script>
