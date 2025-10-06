@@ -11,6 +11,8 @@ const tokyoToSakaiUrl = new URL('tokyo-to-sakai/', siteUrl).toString();
 const faqUrl = new URL('faq/', siteUrl).toString();
 const title = "境町バス乗車ガイド | 乗り場・支払い・乗車の流れ";
 const description = "境町と王子駅・東京駅を結ぶ高速バスの乗り場アクセス、支払い方法、乗車までの流れを写真付きで整理しました。";
+const manifestUrl = new URL('manifest.webmanifest', siteUrl).toString();
+const serviceWorkerUrl = new URL('sw.js', siteUrl).toString();
 
 const howToSchema = {
   "@context": "https://schema.org",
@@ -69,6 +71,7 @@ const withBase = (slug: string) => {
     <link rel="alternate" hreflang="ja" href={sakaiToTokyoUrl} />
     <link rel="alternate" hreflang="ja" href={tokyoToSakaiUrl} />
     <link rel="alternate" hreflang="ja" href={faqUrl} />
+    <link rel="manifest" href={manifestUrl} />
     <meta property="og:type" content="article" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -86,6 +89,13 @@ const withBase = (slug: string) => {
     <link rel="prefetch" href={tokyoToSakaiUrl} as="document" />
     <link rel="prefetch" href={faqUrl} as="document" />
     <Analytics />
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('{serviceWorkerUrl}').catch(() => {});
+        });
+      }
+    </script>
   </head>
   <body>
     <header class="container">
@@ -97,46 +107,94 @@ const withBase = (slug: string) => {
         <a class="route-link" href={withBase('/faq/')}>FAQ</a>
         <a class="route-link is-active" href={withBase('/guide/')}>乗車ガイド</a>
       </nav>
-      <p class="muted">乗り場へのアクセスや乗車の流れを把握して、快適に境町バスを利用しましょう。</p>
+      <p class="muted">乗り場の雰囲気や支払い方法を事前にチェックして、当日の移動をスムーズに。</p>
     </header>
     <main class="container card content-page">
       <section id="fares">
         <h2>運賃・支払い方法</h2>
-        <p>境町バスの基本運賃は大人片道 2,000円（小人 1,000円）です。現金のほか回数券での支払いが可能で、交通系ICカードは利用できません。</p>
-        <ul>
-          <li>片道運賃: 大人 2,000円 / 小人 1,000円</li>
-          <li>回数券: 5枚綴り 8,500円（有効期間6か月）</li>
-          <li>支払い方法: 車内にて現金または回数券を運賃箱へ投入</li>
-        </ul>
-        <p>詳しい料金体系や割引については <a class="link" href="https://www.town.ibaraki-sakai.lg.jp/page/page002622.html" target="_blank" rel="noopener noreferrer">境町公式サイト</a> をご確認ください。</p>
+        <div class="guide-grid">
+          <div>
+            <p>境町バスの基本運賃は大人片道 2,000円（小人 1,000円）です。現金のほか回数券での支払いが可能で、交通系ICカードは利用できません。</p>
+            <ul>
+              <li>片道運賃: 大人 2,000円 / 小人 1,000円</li>
+              <li>回数券: 5枚綴り 8,500円（有効期間6か月）</li>
+              <li>支払い方法: 車内にて現金または回数券を運賃箱へ投入</li>
+            </ul>
+            <p>詳しい料金体系や割引については <a class="link" href="https://www.town.ibaraki-sakai.lg.jp/page/page002622.html" target="_blank" rel="noopener noreferrer">境町公式サイト</a> をご確認ください。</p>
+          </div>
+          <figure class="guide-media">
+            <img src="https://images.unsplash.com/photo-1529427302867-54a4d0856171?auto=format&fit=crop&w=640&q=80" alt="高速バスの乗車券イメージ" loading="lazy" />
+            <figcaption>回数券は境町役場や案内所で販売されています。</figcaption>
+          </figure>
+        </div>
       </section>
+
       <section>
         <h2>境町バスターミナル</h2>
-        <p>境町役場近くにあるターミナルから出発します。待合所には券売機はなく、車内での現金精算が基本です。回数券を利用する場合は事前に境町役場・高速バス案内所などで購入してください。</p>
-        <ul>
-          <li>所在地: 茨城県猿島郡境町長井戸1688-1</li>
-          <li>駐車場: あり（無料）</li>
-          <li>トイレ: ターミナル内に設置</li>
-        </ul>
+        <div class="guide-grid">
+          <div>
+            <p>境町役場近くにあるターミナルから出発します。待合所には券売機はなく、車内での現金精算が基本です。回数券を利用する場合は事前に境町役場・高速バス案内所などで購入してください。</p>
+            <ul>
+              <li>所在地: 茨城県猿島郡境町長井戸1688-1</li>
+              <li>駐車場: あり（無料）</li>
+              <li>トイレ: ターミナル内に設置</li>
+            </ul>
+          </div>
+          <div class="guide-media">
+            <iframe
+              title="境町バスターミナル"
+              loading="lazy"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3193.814256551637!2d139.80014327661543!3d36.107064407862835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f890ea859377%3A0x9a02d06826c0f2b0!2z44CSMzA0LTExMTMg6Iyo5Z-O55yM6bO76YeO55yM55Sw5YyX5biC5bGx5Y-j55S677yS77yS77yR!5e0!3m2!1sja!2sjp!4v1727880000000!5m2!1sja!2sjp"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
       </section>
+
       <section>
         <h2>東京駅八重洲南口</h2>
-        <p>東京駅八重洲南口のバスターミナルから乗車できます。改札から少し距離があるため、出発の10分前到着をおすすめします。夕方以降は混雑しやすいので時間に余裕を持ちましょう。</p>
-        <ul>
-          <li>最寄り改札: JR東京駅 八重洲南口</li>
-          <li>目印: バスターミナル4番のりば</li>
-          <li>待合スペース: 屋内ベンチ、売店あり</li>
-        </ul>
+        <div class="guide-grid">
+          <div>
+            <p>東京駅八重洲南口のバスターミナルから乗車できます。改札から少し距離があるため、出発の10分前到着をおすすめします。夕方以降は混雑しやすいので時間に余裕を持ちましょう。</p>
+            <ul>
+              <li>最寄り改札: JR東京駅 八重洲南口</li>
+              <li>目印: バスターミナル4番のりば</li>
+              <li>待合スペース: 屋内ベンチ、売店あり</li>
+            </ul>
+          </div>
+          <div class="guide-media">
+            <iframe
+              title="東京駅八重洲南口 バスターミナル"
+              loading="lazy"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.099156648494!2d139.7681366765675!3d35.68098943004761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188bf6528df7c3%3A0x3efea2d1719ab11!2z5p2x5Lqs6YO95Y-w5p2R5bel5aSnIOmrmOafpeS6rOOCuOODvOODvOOCuSBDUzAwMS0wMTE1IOOCuuOCv-ODvOODk-OCuuODvOODq-ODvA!5e0!3m2!1sja!2sjp!4v1727880001000!5m2!1sja!2sjp"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
       </section>
+
       <section>
         <h2>王子駅（北口ロータリー）</h2>
-        <p>王子駅北口ロータリーの専用乗り場から乗車します。地下鉄南北線をご利用の方は、王子駅3番出口から地上に出て徒歩1分です。</p>
-        <ul>
-          <li>最寄り出口: JR王子駅 北口 / 東京メトロ南北線 王子駅3番出口</li>
-          <li>待合スペース: 屋外ベンチのみ</li>
-          <li>注意点: 雨天時は屋根が少ないので雨具をご用意ください</li>
-        </ul>
+        <div class="guide-grid">
+          <div>
+            <p>王子駅北口ロータリーの専用乗り場から乗車します。地下鉄南北線をご利用の方は、王子駅3番出口から地上に出て徒歩1分です。</p>
+            <ul>
+              <li>最寄り出口: JR王子駅 北口 / 東京メトロ南北線 王子駅3番出口</li>
+              <li>待合スペース: 屋外ベンチのみ</li>
+              <li>注意点: 雨天時は屋根が少ないので雨具をご用意ください</li>
+            </ul>
+          </div>
+          <div class="guide-media">
+            <iframe
+              title="王子駅北口ロータリー"
+              loading="lazy"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3238.6761289591144!2d139.7336701765696!3d35.75215162646185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f1a991cfab85%3A0xd39b1d4f08c3c833!2z5pyo5rSl5biC44Ki44O844On44Oz44OJ44O844Or44K5IOOCouODvOODleOCouODvOODieOCq-ODs-ODg-OCow!5e0!3m2!1sja!2sjp!4v1727880002000!5m2!1sja!2sjp"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
       </section>
+
       <section>
         <h2>乗車の流れ</h2>
         <ol class="guide-steps">

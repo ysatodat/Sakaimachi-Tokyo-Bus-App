@@ -1,9 +1,10 @@
 ---
 import "../styles/global.css";
 import App from "../components/App.tsx";
-import timetable from "../data/timetable.sample.json";
+import { loadTimetable } from "../lib/loadTimetable";
 import Analytics from "../components/Analytics.astro";
 
+const timetable = await loadTimetable();
 const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://sakaimachi-bus.amida-des.com';
 const base = import.meta.env.PUBLIC_BASE_PATH ?? '/';
 const siteUrl = new URL(base, site).toString();
@@ -23,7 +24,7 @@ const keywords = [
   "東京 境町 直行バス"
 ].join(", ");
 
-const route = (timetable as any)?.routes?.find((r: any) => r.id === 'tokyo_to_sakai');
+const route = (timetable)?.routes?.find((r: any) => r.id === 'tokyo_to_sakai');
 const trips = (route?.trips ?? []).slice(0, 6);
 const stops = Array.isArray(route?.stops) ? route?.stops : [];
 
@@ -99,6 +100,8 @@ const overviewUrl = siteUrl;
 const sakaiToTokyoUrl = new URL('sakai-to-tokyo/', siteUrl).toString();
 const faqUrl = new URL('faq/', siteUrl).toString();
 const guideUrl = new URL('guide/', siteUrl).toString();
+const manifestUrl = new URL('manifest.webmanifest', siteUrl).toString();
+const serviceWorkerUrl = new URL('sw.js', siteUrl).toString();
 ---
 <html lang="ja">
   <head>
@@ -118,6 +121,7 @@ const guideUrl = new URL('guide/', siteUrl).toString();
     <link rel="prefetch" href={sakaiToTokyoUrl} as="document" />
     <link rel="prefetch" href={faqUrl} as="document" />
     <link rel="prefetch" href={guideUrl} as="document" />
+    <link rel="manifest" href={manifestUrl} />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
@@ -140,6 +144,13 @@ const guideUrl = new URL('guide/', siteUrl).toString();
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <Analytics />
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('{serviceWorkerUrl}').catch(() => {});
+        });
+      }
+    </script>
   </head>
   <body>
     <App
@@ -148,6 +159,7 @@ const guideUrl = new URL('guide/', siteUrl).toString();
       initialDirection="tokyo_to_sakai"
       initialTokyoStop="tokyo"
       currentView="tokyo_to_sakai"
+      timetable={timetable}
     />
   </body>
 </html>

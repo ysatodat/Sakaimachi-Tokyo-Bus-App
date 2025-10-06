@@ -14,11 +14,11 @@
 ## 2. Next (1〜3か月)
 | # | Issue タイトル案 | 説明 | ラベル | 期限目安 |
 |---|------------------|------|--------|----------|
-| 5 | ガイドページ拡充（写真・アクセス情報） | Guide に停留所写真／Google Map 埋め込み／料金表を追加 | `content`, `seo`, `frontend` | 2か月以内 |
-| 6 | OG画像テンプレ刷新 & 自動生成スクリプト更新 | `gen:og` を最新デザインに更新し、主要ページごとの OGP を再生成 | `design`, `seo`, `automation` | 2か月以内 |
-| 7 | Service Worker / Manifest の PWA PoC | `@astrojs/pwa` などを試し、オフラインキャッシュと更新通知の土台を構築 | `pwa`, `frontend`, `medium-term` | 3か月以内 |
-| 8 | 時刻表データのスプレッドシート同期 | Google Sheets から JSON を生成するスクリプト + CI 連携を構築 | `data`, `automation`, `medium-term` | 3か月以内 |
-| 9 | Lighthouse / Pa11y CI 導入 | GitHub Actions で Lighthouse/Pa11y を実行しレポートを保存 | `a11y`, `infra`, `medium-term` | 3か月以内 |
+| 5 | ✅ ガイドページ拡充（写真・アクセス情報） | Guide に停留所写真／Google Map 埋め込み／料金表を追加 | `content`, `seo`, `frontend` | 2か月以内 |
+| 6 | ✅ OG画像テンプレ刷新 & 自動生成スクリプト更新 | `gen:og` を最新デザインに更新し、主要ページごとの OGP を再生成 | `design`, `seo`, `automation` | 2か月以内 |
+| 7 | ✅ Service Worker / Manifest の PWA PoC | Service Worker と Web App Manifest を整備し、ホーム追加後もオフラインで動作するようにする | `pwa`, `frontend`, `medium-term` | 3か月以内 |
+| 8 | ✅ 時刻表データのスプレッドシート同期 | TIMETABLE_URL 経由でリモートJSONを取得・同期する仕組みを整備 | `data`, `automation`, `medium-term` | 3か月以内 |
+| 9 | ✅ Lighthouse / Pa11y CI 導入 | GitHub Actions で Lighthouse/Pa11y を実行しレポートを保存 | `a11y`, `infra`, `medium-term` | 3か月以内 |
 
 ## 3. Later (3〜6か月)
 | # | Issue タイトル案 | 説明 | ラベル | 期限目安 |

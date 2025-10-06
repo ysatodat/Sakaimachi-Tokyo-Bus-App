@@ -2,11 +2,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import Controls from './Controls';
 import TripRows from './TripRows';
-import data from '../data/timetable.sample.json';
+import type { Timetable } from '../lib/loadTimetable';
 import { trackEvent } from '../lib/analytics';
 
 type AppProps = {
   initialNowIso: string;
+  timetable: Timetable;
   initialDirection?: 'sakai_to_tokyo'|'tokyo_to_sakai';
   initialTokyoStop?: 'oji'|'tokyo';
   currentView?: 'overview'|'sakai_to_tokyo'|'tokyo_to_sakai';
@@ -21,6 +22,7 @@ const withBasePath = (slug: string) => {
 
 export default function App({
   initialNowIso,
+  timetable,
   initialDirection = 'sakai_to_tokyo',
   initialTokyoStop = 'oji',
   currentView = 'overview'
@@ -29,36 +31,36 @@ export default function App({
   const [tokyoStop,setTokyoStop] = useState<'oji'|'tokyo'>(initialTokyoStop);
   const [nowValue,setNowValue]   = useState<string>('');
 
-  const routes = (data as any).routes as any[];
+  const routes = useMemo(() => Array.isArray((timetable as any).routes) ? (timetable as any).routes as any[] : [], [timetable]);
   const trips  = useMemo(()=> direction==='sakai_to_tokyo'
     ? (routes.find(r=>r.id==='sakai_to_tokyo')?.trips ?? [])
     : (routes.find(r=>r.id==='tokyo_to_sakai')?.trips ?? [])
-  ,[direction]);
+  ,[direction, routes]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
       const stored = localStorage.getItem('sbm:user-preferences');
-      if (!stored) return;
-      const prefs = JSON.parse(stored);
-      if (prefs.direction === 'sakai_to_tokyo' || prefs.direction === 'tokyo_to_sakai') {
-        setDirection(prefs.direction);
-      }
-      if (prefs.tokyoStop === 'oji' || prefs.tokyoStop === 'tokyo') {
-        setTokyoStop(prefs.tokyoStop);
-      }
-      if (typeof prefs.nowValue === 'string') {
-        setNowValue(prefs.nowValue);
+      if (stored) {
+        const prefs = JSON.parse(stored);
+        if (prefs.direction === 'sakai_to_tokyo' || prefs.direction === 'tokyo_to_sakai') {
+          setDirection(prefs.direction);
+        }
+        if (prefs.tokyoStop === 'oji' || prefs.tokyoStop === 'tokyo') {
+          setTokyoStop(prefs.tokyoStop);
+        }
+        if (typeof prefs.nowValue === 'string') {
+          setNowValue(prefs.nowValue);
+        }
+        return;
       }
     } catch (error) {
       console.warn('[prefs] failed to load', error);
     }
-    if (!localStorage.getItem('sbm:user-preferences')) {
-      const current = new Date();
-      const hh = current.getHours().toString().padStart(2, '0');
-      const mm = current.getMinutes().toString().padStart(2, '0');
-      setNowValue(`${hh}:${mm}`);
-    }
+    const current = new Date();
+    const hh = current.getHours().toString().padStart(2, '0');
+    const mm = current.getMinutes().toString().padStart(2, '0');
+    setNowValue(`${hh}:${mm}`);
   }, []);
 
   useEffect(() => {
@@ -75,7 +77,7 @@ export default function App({
     }
   }, [direction, tokyoStop, nowValue]);
 
-  const note = (data as any).calendar?.note ?? '';
+  const note = (timetable as any).calendar?.note ?? '';
 
   return (
     <>
