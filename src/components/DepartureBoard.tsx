@@ -79,13 +79,11 @@ export default function DepartureBoard({
     const urlDate = params.get('date');
     if (urlDate && fromIsoDate(urlDate)) setSelectedDateIso(urlDate);
 
-    setNow(nowJst());
     hydrated.current = true;
   }, [lockDirection]);
 
   /* --- 毎秒の時計。タブが非表示のあいだは止めて電池を使わない ----------- */
   useEffect(() => {
-    if (!hydrated.current && now === null) return;
     let timer: ReturnType<typeof setInterval> | null = null;
 
     const start = () => {
@@ -106,7 +104,7 @@ export default function DepartureBoard({
       stop();
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [now === null]);
+  }, []);
 
   /* --- 設定の保存と URL 同期 -------------------------------------------- */
   useEffect(() => {

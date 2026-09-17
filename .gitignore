@@ -155,3 +155,6 @@ vite.config.ts.timestamp-*
 
 # Lighthouse CI
 .lighthouseci/
+
+# 時刻表のリモート取り込み用スナップショット
+src/data/timetable.remote.json
