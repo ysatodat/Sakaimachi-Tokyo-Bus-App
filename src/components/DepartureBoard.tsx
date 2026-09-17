@@ -148,9 +148,12 @@ export default function DepartureBoard({
     return route.boardingStops.includes(preferredStop) ? preferredStop : route.boardingStops[0]!;
   }, [route, preferredStop]);
 
-  const today: JstDate | null = now
-    ? { year: now.year, month: now.month, day: now.day, weekday: now.weekday }
-    : null;
+  // 毎秒の更新で日付の同一性まで変わると、その日の一覧が毎秒作り直されてしまう。
+  // 日付が実際に変わったときだけ新しいオブジェクトになるようにする。
+  const today = useMemo<JstDate | null>(
+    () => (now ? { year: now.year, month: now.month, day: now.day, weekday: now.weekday } : null),
+    [now?.year, now?.month, now?.day, now?.weekday]
+  );
   const reference = useMemo(() => (now ? referenceFrom(now) : null), [now]);
 
   const upcoming = useMemo(
