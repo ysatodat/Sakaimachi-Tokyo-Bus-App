@@ -1,0 +1,82 @@
+---
+/** 3 つの次発ページ（総合 / 境町発 / 東京発）で共有する本体。 */
+import DepartureBoard from "./DepartureBoard.tsx";
+import StaticTimetable from "./StaticTimetable.astro";
+import { PAGES, withBase } from "../lib/site";
+import type { NormalizedTimetable, RouteId, StopId } from "../lib/timetable";
+
+interface Props {
+  timetable: NormalizedTimetable;
+  heading: string;
+  lead: string;
+  direction: RouteId;
+  boardStop?: StopId;
+  lockDirection?: boolean;
+  /** 早見表に出す路線。省略時は direction のみ */
+  staticRoutes?: RouteId[];
+}
+
+const {
+  timetable,
+  heading,
+  lead,
+  direction,
+  boardStop,
+  lockDirection = false,
+  staticRoutes
+} = Astro.props;
+
+const routes = staticRoutes ?? [direction];
+const meta = timetable.meta;
+---
+
+<main id="main" class="container page">
+  <div class="stack">
+    <h1 style="font-size:clamp(24px,5vw,30px);">{heading}</h1>
+    <p class="muted" style="font-size:15px;max-width:62ch;">{lead}</p>
+  </div>
+
+  {meta.pendingRevision && (
+    <div class="notice notice--warning" role="note">
+      <span class="notice__icon" aria-hidden="true">⚠️</span>
+      <span class="notice__body">
+        <span class="notice__title">{meta.pendingRevision.label}が告知されています</span>
+        <span>
+          {meta.pendingRevision.summary}{" "}
+          <a href={meta.pendingRevision.url} target="_blank" rel="noopener noreferrer">
+            改定のお知らせを見る
+          </a>
+        </span>
+      </span>
+    </div>
+  )}
+
+  <DepartureBoard
+    client:load
+    timetable={timetable}
+    initialDirection={direction}
+    initialBoardStop={boardStop}
+    lockDirection={lockDirection}
+    timetableHref={withBase(PAGES.timetable)}
+    guideHref={withBase(PAGES.guide)}
+  />
+
+  <section class="stack" aria-labelledby="static-timetable-heading">
+    <h2 class="section-title" id="static-timetable-heading">
+      時刻表（全便）
+      <span class="section-title__hint">{meta.revisionLabel}</span>
+    </h2>
+    {routes.map((routeId) => (
+      <StaticTimetable timetable={timetable} routeId={routeId} headingLevel="h3" />
+    ))}
+    <p class="muted" style="font-size:12px;line-height:1.8;">
+      出典: {meta.sources.map((source, index) => (
+        <>
+          {index > 0 && " ／ "}
+          <a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}</a>
+        </>
+      ))}
+      {meta.verifiedOn ? `（最終確認 ${meta.verifiedOn}）` : "（最終確認日は未記録）"}
+    </p>
+  </section>
+</main>

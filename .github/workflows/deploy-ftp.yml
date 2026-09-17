@@ -45,7 +45,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         if: ${{ steps.secrets-ready.outputs.ready == 'true' }}
-        with: { node-version: '20' }
+        with: { node-version: '22' }
 
       - run: npm config set fetch-retries 5
         if: ${{ steps.secrets-ready.outputs.ready == 'true' }}

@@ -1,18 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="境町バスミニ">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0ea5e9"/>
-      <stop offset="100%" stop-color="#2563eb"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2f6bff"/>
+      <stop offset="100%" stop-color="#1436b8"/>
     </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="14" fill="url(#g)"/>
-  <!-- simple bus mark -->
-  <g fill="#fff" opacity="0.95">
-    <rect x="14" y="18" width="36" height="22" rx="4"/>
-    <rect x="18" y="22" width="12" height="8" rx="1.5" fill="#0b5dd6" opacity="0.95"/>
-    <rect x="34" y="22" width="12" height="8" rx="1.5" fill="#0b5dd6" opacity="0.95"/>
-    <circle cx="22" cy="44" r="4"/>
-    <circle cx="42" cy="44" r="4"/>
+  <rect width="64" height="64" rx="15" fill="url(#bg)"/>
+  <g fill="#ffffff">
+    <rect x="15" y="14" width="34" height="30" rx="7"/>
+    <circle cx="21" cy="47" r="4.5"/>
+    <circle cx="43" cy="47" r="4.5"/>
   </g>
+  <rect x="19" y="19" width="26" height="11" rx="3" fill="#1436b8"/>
+  <rect x="19" y="34" width="8" height="4" rx="2" fill="#2f6bff"/>
+  <rect x="37" y="34" width="8" height="4" rx="2" fill="#2f6bff"/>
 </svg>
-

@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "revision": "2024-04-01",
+    "revisionLabel": "令和6年4月1日改定",
+    "verifiedOn": null,
+    "staleAfterDays": 180,
+    "timezone": "Asia/Tokyo",
+    "note": "境町→東京は平日と土日祝で到着時刻が異なります。東京→境町の到着時刻は平日・土日祝とも同一です。",
+    "operators": [
+      { "label": "関東鉄道", "url": "https://www.kantetsu.co.jp/highwaybus/sakai-tokyo" },
+      { "label": "JRバス関東", "url": "https://www.jrbuskanto.co.jp/" }
+    ],
+    "sources": [
+      {
+        "label": "境町公式サイト 高速バス案内",
+        "url": "https://www.town.ibaraki-sakai.lg.jp/page/page002622.html"
+      },
+      {
+        "label": "関東鉄道 境町〜東京駅線",
+        "url": "https://www.kantetsu.co.jp/highwaybus/sakai-tokyo"
+      }
+    ],
+    "pendingRevision": {
+      "date": "2026-01-01",
+      "label": "2026年1月1日 ダイヤ・運賃改定",
+      "summary": "運行事業者より 2026年1月1日乗車分からの改定が告知されています。本アプリの時刻はまだ改定前のデータです。",
+      "url": "https://www.jrbuskanto.co.jp/jwp/topics/20260101sakaimachi.html"
+    }
+  },
+  "stops": {
+    "sakai": {
+      "name": "境町高速バスターミナル",
+      "short": "境町",
+      "platform": "境町高速バスターミナル",
+      "access": "茨城県猿島郡境町。無料駐車場・待合所あり。",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E5%A2%83%E7%94%BA%E9%AB%98%E9%80%9F%E3%83%90%E3%82%B9%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB"
+    },
+    "oji": {
+      "name": "王子駅",
+      "short": "王子",
+      "platform": "王子駅前 高速バスのりば",
+      "access": "JR王子駅 北口 / 東京メトロ南北線 王子駅 3番出口すぐ。",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E7%8E%8B%E5%AD%90%E9%A7%85%E5%89%8D%20%E9%AB%98%E9%80%9F%E3%83%90%E3%82%B9%E3%81%AE%E3%82%8A%E3%81%B0"
+    },
+    "tokyo": {
+      "name": "東京駅",
+      "short": "東京",
+      "platform": "東京駅八重洲南口 JR高速バスのりば",
+      "access": "JR東京駅 八重洲南口。改札から徒歩5分程度。",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E6%9D%B1%E4%BA%AC%E9%A7%85%E5%85%AB%E9%87%8D%E6%B4%B2%E5%8D%97%E5%8F%A3%20JR%E9%AB%98%E9%80%9F%E3%83%90%E3%82%B9%E3%81%AE%E3%82%8A%E3%81%B0"
+    }
+  },
+  "fares": {
+    "asOf": "2024-04-01",
+    "verified": false,
+    "note": "2026年1月1日に運賃改定が実施されています。金額は必ず運行事業者の公式ページでご確認ください。",
+    "sections": [],
+    "tickets": [
+      { "label": "回数券", "detail": "境町役場・高速バス案内所などで販売（詳細は公式ページ）" }
+    ],
+    "payments": ["車内での現金精算", "回数券", "交通系ICカード（取り扱いは公式ページで要確認）"]
+  },
+  "routes": [
+    {
+      "id": "sakai_to_tokyo",
+      "name": "境町 → 東京",
+      "trips": [
+        { "id": "s2t-0520", "times": { "sakai": "05:20", "oji": { "weekday": "06:25", "holiday": "06:15" }, "tokyo": { "weekday": "07:00", "holiday": "06:50" } } },
+        { "id": "s2t-0650", "times": { "sakai": "06:50", "oji": { "weekday": "08:05", "holiday": "07:45" }, "tokyo": { "weekday": "08:40", "holiday": "08:20" } } },
+        { "id": "s2t-0850", "times": { "sakai": "08:50", "oji": { "weekday": "10:15", "holiday": "09:45" }, "tokyo": { "weekday": "11:00", "holiday": "10:20" } } },
+        { "id": "s2t-1040", "times": { "sakai": "10:40", "oji": { "weekday": "11:45", "holiday": "11:35" }, "tokyo": { "weekday": "12:20", "holiday": "12:10" } } },
+        { "id": "s2t-1140", "times": { "sakai": "11:40", "oji": { "weekday": "12:45", "holiday": "12:35" }, "tokyo": { "weekday": "13:20", "holiday": "13:10" } } },
+        { "id": "s2t-1340", "times": { "sakai": "13:40", "oji": { "weekday": "14:45", "holiday": "14:35" }, "tokyo": { "weekday": "15:20", "holiday": "15:10" } } },
+        { "id": "s2t-1540", "times": { "sakai": "15:40", "oji": { "weekday": "16:45", "holiday": "16:35" }, "tokyo": { "weekday": "17:20", "holiday": "17:10" } } },
+        { "id": "s2t-1810", "times": { "sakai": "18:10", "oji": { "weekday": "19:15", "holiday": "19:05" }, "tokyo": { "weekday": "19:50", "holiday": "19:40" } } }
+      ]
+    },
+    {
+      "id": "tokyo_to_sakai",
+      "name": "東京 → 境町",
+      "trips": [
+        { "id": "t2s-0840", "times": { "tokyo": "08:40", "oji": "09:15", "sakai": "10:13" } },
+        { "id": "t2s-1050", "times": { "tokyo": "10:50", "oji": "11:25", "sakai": "12:23" } },
+        { "id": "t2s-1210", "times": { "tokyo": "12:10", "oji": "12:45", "sakai": "13:43" } },
+        { "id": "t2s-1410", "times": { "tokyo": "14:10", "oji": "14:45", "sakai": "15:43" } },
+        { "id": "t2s-1540", "times": { "tokyo": "15:40", "oji": "16:15", "sakai": "17:13" } },
+        { "id": "t2s-1720", "times": { "tokyo": "17:20", "oji": "17:55", "sakai": "18:53" } },
+        { "id": "t2s-1920", "times": { "tokyo": "19:20", "oji": "19:55", "sakai": "20:53" } },
+        { "id": "t2s-2130", "times": { "tokyo": "21:30", "oji": "22:05", "sakai": "23:03" } }
+      ]
+    }
+  ]
+}

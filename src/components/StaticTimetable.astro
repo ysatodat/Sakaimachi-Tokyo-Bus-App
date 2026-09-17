@@ -1,0 +1,85 @@
+---
+/**
+ * JavaScript なしでも読める時刻表。
+ * 静的 HTML としてビルド時に出力するため、検索エンジンにも
+ * スクリーンリーダーにもそのまま全便が伝わる。
+ */
+import { formatHHmm } from "../lib/jst";
+import type { NormalizedTimetable, RouteId } from "../lib/timetable";
+import { findRoute } from "../lib/timetable";
+
+interface Props {
+  timetable: NormalizedTimetable;
+  routeId: RouteId;
+  /** true なら details を開いた状態で描画する */
+  open?: boolean;
+  headingLevel?: "h2" | "h3";
+}
+
+const { timetable, routeId, open = false, headingLevel = "h2" } = Astro.props;
+const route = findRoute(timetable, routeId);
+const stops = timetable.stops;
+
+const buildRows = (dayType: "weekday" | "holiday") =>
+  (route?.trips ?? []).map((trip) =>
+    (route?.stops ?? []).map((stopId) => {
+      const minutes = trip.times[dayType][stopId];
+      return minutes == null ? "—" : formatHHmm(minutes);
+    })
+  );
+
+const weekdayRows = buildRows("weekday");
+const holidayRows = buildRows("holiday");
+const identical = JSON.stringify(weekdayRows) === JSON.stringify(holidayRows);
+
+const tables = identical
+  ? [{ label: "平日・土日祝 共通", rows: weekdayRows }]
+  : [
+      { label: "平日ダイヤ", rows: weekdayRows },
+      { label: "土日祝ダイヤ", rows: holidayRows }
+    ];
+
+const Heading = headingLevel;
+const routeName = route?.name ?? "";
+---
+
+{route && (
+  <details class="faq-item" open={open}>
+    <summary>
+      <Heading style="font-size:15px;margin:0;">{routeName} の時刻表（全{route.trips.length}便）</Heading>
+    </summary>
+    <div class="faq-item__body" style="display:grid;gap:24px;">
+      {tables.map((table) => (
+        <div class="table-scroll">
+          <table class="timetable-table">
+            <caption>{routeName} ／ {table.label}</caption>
+            <thead>
+              <tr>
+                <th scope="col">便</th>
+                {route.stops.map((stopId, index) => (
+                  <th scope="col">
+                    {stops[stopId]?.name ?? stopId}
+                    <span class="muted"> {index === 0 ? "発" : "着"}</span>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {table.rows.map((cells, rowIndex) => (
+                <tr>
+                  <th scope="row">{rowIndex + 1}</th>
+                  {cells.map((cell) => (
+                    <td class="tnum">{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ))}
+      <p class="muted" style="font-size:12px;">
+        {timetable.meta.revisionLabel}のデータです。到着時刻は道路状況により前後します。
+      </p>
+    </div>
+  </details>
+)}

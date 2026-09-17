@@ -25,7 +25,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - uses: actions/setup-node@v4
-        with: { node-version: '20' }
+        with: { node-version: '22' }
 
       # 安定化オプション（任意）
       - run: npm config set fetch-retries 5

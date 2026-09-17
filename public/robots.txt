@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://sakaimachi-bus.amida-des.com/sitemap-index.xml

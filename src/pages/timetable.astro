@@ -1,0 +1,114 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import StaticTimetable from "../components/StaticTimetable.astro";
+import { loadTimetable } from "../lib/loadTimetable";
+import { breadcrumbSchema, routeSchema } from "../lib/schema";
+import { PAGES, withBase } from "../lib/site";
+import { formatHHmm } from "../lib/jst";
+import { findRoute } from "../lib/timetable";
+
+const timetable = await loadTimetable();
+const meta = timetable.meta;
+
+const title = "境町 ⇄ 東京 高速バス 全便時刻表（平日・土日祝）| 境町バスミニ";
+const description =
+  "境町高速バスターミナル・王子駅・東京駅を結ぶ高速バスの全便時刻表。平日ダイヤと土日祝ダイヤを並べて掲載しています。";
+
+const jsonLd = [
+  breadcrumbSchema([
+    { name: "境町 ↔ 東京 高速バス", slug: PAGES.home },
+    { name: "全便時刻表", slug: PAGES.timetable }
+  ]),
+  routeSchema(timetable, "sakai_to_tokyo"),
+  routeSchema(timetable, "tokyo_to_sakai")
+].filter(Boolean);
+
+const summary = (["sakai_to_tokyo", "tokyo_to_sakai"] as const).map((routeId) => {
+  const route = findRoute(timetable, routeId);
+  const origin = route?.stops[0];
+  const first = route?.trips[0]?.times.weekday[origin!];
+  const last = route?.trips[route.trips.length - 1]?.times.weekday[origin!];
+  return {
+    name: route?.name ?? "",
+    count: route?.trips.length ?? 0,
+    first: first == null ? "—" : formatHHmm(first),
+    last: last == null ? "—" : formatHHmm(last)
+  };
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  slug={PAGES.timetable}
+  navKey="timetable"
+  ogImage="og-timetable.png"
+  ogImageAlt="境町⇄東京 高速バスの全便時刻表"
+  keywords={["境町 高速バス 時刻表", "境町 東京 バス 時刻表", "王子駅 高速バス 時刻表", "土日祝ダイヤ"]}
+  jsonLd={jsonLd}
+>
+  <main id="main" class="container page">
+    <div class="stack">
+      <h1 style="font-size:clamp(24px,5vw,30px);">全便時刻表</h1>
+      <p class="muted" style="font-size:15px;max-width:62ch;">
+        境町高速バスターミナル・王子駅・東京駅を結ぶ高速バスの全便です。{meta.revisionLabel}のデータをもとにしています。
+      </p>
+    </div>
+
+    {meta.pendingRevision && (
+      <div class="notice notice--warning" role="note">
+        <span class="notice__icon" aria-hidden="true">⚠️</span>
+        <span class="notice__body">
+          <span class="notice__title">{meta.pendingRevision.label}が告知されています</span>
+          <span>
+            {meta.pendingRevision.summary}{" "}
+            <a href={meta.pendingRevision.url} target="_blank" rel="noopener noreferrer">
+              改定のお知らせを見る
+            </a>
+          </span>
+        </span>
+      </div>
+    )}
+
+    <div class="info-grid">
+      {summary.map((item) => (
+        <div class="info-card">
+          <span class="info-card__title">{item.name}</span>
+          <span class="info-card__desc">
+            1日 {item.count} 便 ／ 始発 <span class="tnum">{item.first}</span> ・ 終バス{" "}
+            <span class="tnum">{item.last}</span>（平日基準）
+          </span>
+        </div>
+      ))}
+    </div>
+
+    <section class="stack">
+      <StaticTimetable timetable={timetable} routeId="sakai_to_tokyo" open headingLevel="h2" />
+      <StaticTimetable timetable={timetable} routeId="tokyo_to_sakai" open headingLevel="h2" />
+    </section>
+
+    <section class="card card--padded prose">
+      <h2>ダイヤの見かた</h2>
+      <ul>
+        <li>土曜・日曜・国民の祝日（振替休日・国民の休日を含む）は<strong>土日祝ダイヤ</strong>で運行します。</li>
+        <li>境町発の便は、平日と土日祝で王子駅・東京駅への到着時刻が異なります。</li>
+        <li>東京発の便は、東京駅→王子駅→境町の順に停車します。王子駅から乗る場合の発車時刻は表の王子駅の欄をご覧ください。</li>
+        <li>到着時刻は目安です。渋滞・天候により前後します。</li>
+      </ul>
+      <p>
+        今から乗れる便を知りたいときは
+        <a href={withBase(PAGES.home)}>次発ページ</a>
+        をご利用ください。カウントダウンとカレンダー追加に対応しています。
+      </p>
+      <p class="muted" style="font-size:13px;">
+        出典:{" "}
+        {meta.sources.map((source, index) => (
+          <>
+            {index > 0 && " ／ "}
+            <a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}</a>
+          </>
+        ))}
+      </p>
+    </section>
+  </main>
+</BaseLayout>

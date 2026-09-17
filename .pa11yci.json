@@ -2,18 +2,16 @@
   "defaults": {
     "standard": "WCAG2AA",
     "timeout": 60000,
-    "wait": 1000,
+    "wait": 1500,
     "chromeLaunchConfig": {
-      "args": [
-        "--no-sandbox",
-        "--disable-setuid-sandbox"
-      ]
+      "args": ["--no-sandbox", "--disable-setuid-sandbox"]
     }
   },
   "urls": [
     "http://127.0.0.1:4173/",
     "http://127.0.0.1:4173/sakai-to-tokyo/",
     "http://127.0.0.1:4173/tokyo-to-sakai/",
+    "http://127.0.0.1:4173/timetable/",
     "http://127.0.0.1:4173/guide/",
     "http://127.0.0.1:4173/faq/"
   ]

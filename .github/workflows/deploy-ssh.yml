@@ -5,30 +5,60 @@ on:
     branches: [ main ]
   workflow_dispatch: {}
 
+concurrency:
+  group: ssh-deploy
+  cancel-in-progress: true
+
 jobs:
   deploy:
-    if: ${{ github.ref == 'refs/heads/main' && secrets.SSH_PRIVATE_KEY != '' && secrets.REMOTE_HOST != '' && secrets.REMOTE_USER != '' && secrets.REMOTE_PATH != '' }}
     runs-on: ubuntu-latest
     steps:
+      # secrets コンテキストは job レベルの if では参照できず、
+      # 記述するとワークフロー全体が解析エラーになる。必ずステップ内で判定する。
+      - name: Check required secrets
+        id: secrets-ready
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
+        run: |
+          missing=()
+          [[ -z "$SSH_PRIVATE_KEY" ]] && missing+=(SSH_PRIVATE_KEY)
+          [[ -z "$REMOTE_HOST" ]] && missing+=(REMOTE_HOST)
+          [[ -z "$REMOTE_USER" ]] && missing+=(REMOTE_USER)
+          [[ -z "$REMOTE_PATH" ]] && missing+=(REMOTE_PATH)
+
+          if [ ${#missing[@]} -eq 0 ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::SSHデプロイをスキップします。未設定のシークレット: ${missing[*]}"
+          fi
+
       - uses: actions/checkout@v4
+        if: ${{ steps.secrets-ready.outputs.ready == 'true' }}
 
       - uses: actions/setup-node@v4
-        with: { node-version: '20' }
-
-      - run: npm config set fetch-retries 5
-      - run: npm config set fetch-retry-mintimeout 20000
-      - run: npm config set fetch-retry-maxtimeout 120000
+        if: ${{ steps.secrets-ready.outputs.ready == 'true' }}
+        with: { node-version: '22' }
 
       - name: Install deps (with fallback)
+        if: ${{ steps.secrets-ready.outputs.ready == 'true' }}
         run: |
           npm ci --no-audit --prefer-online \
           || npm install --no-audit --prefer-online --package-lock=false
 
-      - run: npm run build
+      - name: Build
+        if: ${{ steps.secrets-ready.outputs.ready == 'true' }}
         env:
+          PUBLIC_SITE_URL: ${{ secrets.PUBLIC_SITE_URL || 'https://sakaimachi-bus.amida-des.com' }}
+          PUBLIC_BASE_PATH: ${{ secrets.PUBLIC_BASE_PATH || '/' }}
           PUBLIC_GOOGLE_TAG_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_ID }}
+        run: npm run build
 
       - name: Deploy via rsync over SSH
+        if: ${{ steps.secrets-ready.outputs.ready == 'true' }}
         uses: easingthemes/ssh-deploy@v5.0.3
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -37,4 +67,3 @@ jobs:
           ARGS: "-az --delete"
           SOURCE: "dist/"
           TARGET: ${{ secrets.REMOTE_PATH }}
-

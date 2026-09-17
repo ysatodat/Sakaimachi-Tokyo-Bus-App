@@ -1,0 +1,42 @@
+---
+import ThemeToggle from "./ThemeToggle.tsx";
+import { PAGES, SITE, withBase } from "../lib/site";
+
+interface Props {
+  navKey?: string;
+}
+const { navKey = "home" } = Astro.props;
+
+const items = [
+  { key: "home", label: "ホーム", href: withBase(PAGES.home) },
+  { key: "sakai-to-tokyo", label: "境町→東京", href: withBase(PAGES.sakaiToTokyo) },
+  { key: "tokyo-to-sakai", label: "東京→境町", href: withBase(PAGES.tokyoToSakai) },
+  { key: "timetable", label: "時刻表", href: withBase(PAGES.timetable) },
+  { key: "guide", label: "ガイド", href: withBase(PAGES.guide) },
+  { key: "faq", label: "FAQ", href: withBase(PAGES.faq) }
+];
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href={withBase(PAGES.home)}>
+      <span class="brand__mark" aria-hidden="true">🚌</span>
+      <span class="brand__text">
+        <span class="brand__title">{SITE.shortName}ミニ</span>
+        <span class="brand__sub">境町 ⇄ 東京</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="サイト内ナビゲーション">
+      {items.map((item) => (
+        <a
+          class:list={["site-nav__link", { "is-active": item.key === navKey }]}
+          href={item.href}
+          aria-current={item.key === navKey ? "page" : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+    <ThemeToggle client:idle />
+  </div>
+</header>

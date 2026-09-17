@@ -152,3 +152,9 @@ vite.config.ts.timestamp-*
 
 # OS junk
 .DS_Store
+
+# Lighthouse CI
+.lighthouseci/
+
+# 時刻表のリモート取り込み用スナップショット
+src/data/timetable.remote.json
