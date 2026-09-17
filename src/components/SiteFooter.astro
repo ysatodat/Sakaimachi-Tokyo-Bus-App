@@ -1,0 +1,32 @@
+---
+import { OFFICIAL_LINKS, PAGES, SITE, withBase } from "../lib/site";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <nav class="site-footer__links" aria-label="フッターナビゲーション">
+      <a href={withBase(PAGES.home)}>ホーム</a>
+      <a href={withBase(PAGES.timetable)}>時刻表</a>
+      <a href={withBase(PAGES.guide)}>乗車ガイド</a>
+      <a href={withBase(PAGES.faq)}>FAQ</a>
+      <a href={OFFICIAL_LINKS.town} target="_blank" rel="noopener noreferrer">境町公式サイト</a>
+      <a
+        href={`${SITE.repository}/issues/new?template=bug_report.yml`}
+        target="_blank"
+        rel="noopener noreferrer">不具合・ご要望</a
+      >
+      <a href={SITE.repository} target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+    <p class="site-footer__legal">
+      本サイトは境町・運行事業者の公式サービスではありません。公開されている時刻表をもとに個人が制作したファンメイドのツールです。<br
+      />
+      掲載時刻は目安です。運行状況・遅延・最新のダイヤは必ず
+      <a href={OFFICIAL_LINKS.kantetsu} target="_blank" rel="noopener noreferrer">関東鉄道</a> ／
+      <a href={OFFICIAL_LINKS.jrbus} target="_blank" rel="noopener noreferrer">JRバス関東</a> ／
+      <a href={OFFICIAL_LINKS.town} target="_blank" rel="noopener noreferrer">境町公式サイト</a>
+      でご確認ください。<br />
+      © {year} <a href={SITE.publisher.url} target="_blank" rel="noopener noreferrer">Amida Design</a>
+    </p>
+  </div>
+</footer>

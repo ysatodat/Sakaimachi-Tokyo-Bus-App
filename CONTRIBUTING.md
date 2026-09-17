@@ -19,6 +19,20 @@
 - type 例: `feat`, `fix`, `docs`, `chore`, `ci`, `refactor` など。
 
 ## Node / ビルド
-- Node 20系推奨。
+- Node 22 系推奨（`node --test` の TypeScript 実行に依存しています）。
 - 通常は `npm ci` を利用し、必要時のみ `npm install` を使います。
+
+## 変更前に通すチェック
+```bash
+npm run verify     # 時刻表検証 → ユニットテスト → 型チェック → ビルド
+npm run test:e2e   # ブラウザ実機の回帰テスト（dist を配信した状態で実行）
+```
+`npm run verify` は CI（`.github/workflows/quality.yml`）でも実行されます。
+CI ではさらに Lighthouse（Accessibility / Best Practices / SEO は 100 点必須、CLS 0.1 未満）と
+Pa11y（WCAG 2.1 AA でエラー 0）が走ります。
+
+## 時刻表データを変更するとき
+- `src/data/timetable.json` の `meta.revision` / `meta.revisionLabel` / `meta.verifiedOn` を必ず更新してください。
+- 公式の改定を反映し終えたら `meta.pendingRevision` を `null` にします（告知バナーが消えます）。
+- `npm run validate:timetable` が通らない変更はマージできません。
 

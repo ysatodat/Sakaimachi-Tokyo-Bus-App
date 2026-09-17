@@ -7,23 +7,29 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check": "astro check",
+    "test": "node --test \"test/**/*.test.mjs\"",
+    "validate:timetable": "node scripts/validate-timetable.mjs",
+    "verify": "npm run validate:timetable && npm run test && npm run check && npm run build",
     "format": "prettier --write .",
     "gen:og": "node scripts/gen-og.mjs",
     "gen:icons": "node scripts/gen-icons.mjs",
-    "sync:timetable": "node scripts/sync-timetable.mjs"
+    "sync:timetable": "node scripts/sync-timetable.mjs",
+    "test:e2e": "node scripts/e2e.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^3.6.0",
     "astro": "^4.10.0",
-    "dayjs": "^1.11.13",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.4",
     "@astrojs/sitemap": "^3.5.1",
     "@resvg/resvg-js": "^2.6.2",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
+    "playwright": "^1.48.0",
     "prettier": "^3.3.3",
     "typescript": "^5.6.2"
   }

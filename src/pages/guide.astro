@@ -1,225 +1,173 @@
 ---
-import "../styles/global.css";
-import Analytics from "../components/Analytics.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { loadTimetable } from "../lib/loadTimetable";
+import { breadcrumbSchema } from "../lib/schema";
+import { OFFICIAL_LINKS, PAGES, withBase } from "../lib/site";
+import type { StopId } from "../lib/timetable";
 
-const site = import.meta.env.PUBLIC_SITE_URL ?? 'https://sakaimachi-bus.amida-des.com';
-const base = import.meta.env.PUBLIC_BASE_PATH ?? '/';
-const siteUrl = new URL(base, site).toString();
-const canonicalUrl = new URL('guide/', siteUrl).toString();
-const sakaiToTokyoUrl = new URL('sakai-to-tokyo/', siteUrl).toString();
-const tokyoToSakaiUrl = new URL('tokyo-to-sakai/', siteUrl).toString();
-const faqUrl = new URL('faq/', siteUrl).toString();
-const title = "境町バス乗車ガイド | 乗り場・支払い・乗車の流れ";
-const description = "境町と王子駅・東京駅を結ぶ高速バスの乗り場アクセス、支払い方法、乗車までの流れを写真付きで整理しました。";
-const manifestUrl = new URL('manifest.webmanifest', siteUrl).toString();
-const serviceWorkerPath = new URL('sw.js', siteUrl).pathname;
+const timetable = await loadTimetable();
+const meta = timetable.meta;
+const stops = timetable.stops;
+const fares = timetable.fares;
+
+const title = "乗車ガイド｜のりば・支払い・乗車の流れ（境町 ⇄ 東京 高速バス）";
+const description =
+  "境町高速バスターミナル・王子駅・東京駅八重洲南口の各のりば、支払い方法、乗車当日の流れをまとめた高速バスの乗車ガイドです。";
 
 const howToSchema = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  name: "境町と東京を結ぶ高速バスの利用方法",
+  name: "境町と東京を結ぶ高速バスの乗り方",
   description,
-  supply: [
-    {
-      "@type": "HowToSupply",
-      name: "乗車券（車内現金または回数券）"
-    }
-  ],
+  totalTime: "PT10M",
   step: [
     {
       "@type": "HowToStep",
       position: 1,
-      name: "出発地を確認する",
-      text: "境町発は境町バスターミナル、東京側は東京駅八重洲南口または王子駅北口ロータリーから出発します。"
+      name: "のりばを確認する",
+      text: "境町発は境町高速バスターミナル、東京側は東京駅八重洲南口の高速バスのりばまたは王子駅前ののりばです。"
     },
     {
       "@type": "HowToStep",
       position: 2,
-      name: "乗車券を用意する",
-      text: "車内で現金精算できます。回数券を利用する場合は事前に境町役場などで購入してください。"
+      name: "発車時刻を確認する",
+      text: "次発ページで出発時刻とカウントダウンを確認し、発車の5分前にはのりばに着くようにします。"
     },
     {
       "@type": "HowToStep",
       position: 3,
-      name: "発車時刻の確認",
-      text: "当サイトの時刻表で次発を確認し、5分前には乗り場で整列しましょう。"
+      name: "乗車する",
+      text: "行き先を確認して乗車します。座席は先着順です。"
     },
     {
       "@type": "HowToStep",
       position: 4,
-      name: "乗車・支払い",
-      text: "乗車時に整理券を取り、降車時に運賃表を確認して運賃箱へ支払います。交通系ICは利用できません。"
+      name: "運賃を支払う",
+      text: "支払い方法と運賃額は運行事業者の案内に従ってください。最新の運賃は公式サイトで確認できます。"
     }
   ]
 };
 
-const basePath = base === '/' ? '' : base.replace(/\/$/, '');
-const withBase = (slug: string) => {
-  const normalized = slug.startsWith('/') ? slug : `/${slug}`;
-  return `${basePath}${normalized}` || '/';
-};
+const jsonLd = [
+  howToSchema,
+  breadcrumbSchema([
+    { name: "境町 ↔ 東京 高速バス", slug: PAGES.home },
+    { name: "乗車ガイド", slug: PAGES.guide }
+  ])
+];
+
+const stopOrder: StopId[] = ["sakai", "oji", "tokyo"];
 ---
-<html lang="ja">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <meta name="robots" content="index,follow" />
-    <link rel="canonical" href={canonicalUrl} />
-    <link rel="alternate" hreflang="ja" href={siteUrl} />
-    <link rel="alternate" hreflang="ja" href={sakaiToTokyoUrl} />
-    <link rel="alternate" hreflang="ja" href={tokyoToSakaiUrl} />
-    <link rel="alternate" hreflang="ja" href={faqUrl} />
-    <link rel="manifest" href={manifestUrl} />
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:site_name" content="境町 ↔ 東京 高速バス ミニ" />
-    <meta property="og:image" content={`${siteUrl}og.png`} />
-    <meta property="og:image:alt" content="境町バス乗車ガイドのOGP" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={`${siteUrl}og.png`} />
-    <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
-    <link rel="prefetch" href={siteUrl} as="document" />
-    <link rel="prefetch" href={sakaiToTokyoUrl} as="document" />
-    <link rel="prefetch" href={tokyoToSakaiUrl} as="document" />
-    <link rel="prefetch" href={faqUrl} as="document" />
-    <Analytics />
-    <script is:inline>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('{serviceWorkerPath}').catch(() => {});
-        });
-      }
-    </script>
-  </head>
-  <body>
-    <header class="container">
-      <h1>境町バス乗車ガイド</h1>
-      <nav class="route-links" aria-label="主要ページ">
-        <a class="route-link" href={withBase('/')}>総合</a>
-        <a class="route-link" href={withBase('/sakai-to-tokyo/')}>境町 → 東京</a>
-        <a class="route-link" href={withBase('/tokyo-to-sakai/')}>東京 → 境町</a>
-        <a class="route-link" href={withBase('/faq/')}>FAQ</a>
-        <a class="route-link is-active" href={withBase('/guide/')}>乗車ガイド</a>
-      </nav>
-      <p class="muted">乗り場の雰囲気や支払い方法を事前にチェックして、当日の移動をスムーズに。</p>
-    </header>
-    <main class="container card content-page">
-      <section id="fares">
-        <h2>運賃・支払い方法</h2>
-        <div class="guide-grid">
-          <div>
-            <p>境町バスの基本運賃は大人片道 2,000円（小人 1,000円）です。現金のほか回数券での支払いが可能で、交通系ICカードは利用できません。</p>
-            <ul>
-              <li>片道運賃: 大人 2,000円 / 小人 1,000円</li>
-              <li>回数券: 5枚綴り 8,500円（有効期間6か月）</li>
-              <li>支払い方法: 車内にて現金または回数券を運賃箱へ投入</li>
-            </ul>
-            <p>詳しい料金体系や割引については <a class="link" href="https://www.town.ibaraki-sakai.lg.jp/page/page002622.html" target="_blank" rel="noopener noreferrer">境町公式サイト</a> をご確認ください。</p>
-          </div>
-          <figure class="guide-media">
-            <img src="https://images.unsplash.com/photo-1529427302867-54a4d0856171?auto=format&fit=crop&w=640&q=80" alt="高速バスの乗車券イメージ" loading="lazy" />
-            <figcaption>回数券は境町役場や案内所で販売されています。</figcaption>
-          </figure>
-        </div>
-      </section>
 
-      <section>
-        <h2>境町バスターミナル</h2>
-        <div class="guide-grid">
-          <div>
-            <p>境町役場近くにあるターミナルから出発します。待合所には券売機はなく、車内での現金精算が基本です。回数券を利用する場合は事前に境町役場・高速バス案内所などで購入してください。</p>
-            <ul>
-              <li>所在地: 茨城県猿島郡境町長井戸1688-1</li>
-              <li>駐車場: あり（無料）</li>
-              <li>トイレ: ターミナル内に設置</li>
-            </ul>
-          </div>
-          <div class="guide-media">
-            <iframe
-              title="境町バスターミナル"
-              loading="lazy"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3193.814256551637!2d139.80014327661543!3d36.107064407862835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f890ea859377%3A0x9a02d06826c0f2b0!2z44CSMzA0LTExMTMg6Iyo5Z-O55yM6bO76YeO55yM55Sw5YyX5biC5bGx5Y-j55S677yS77yS77yR!5e0!3m2!1sja!2sjp!4v1727880000000!5m2!1sja!2sjp"
-              allowfullscreen
-            ></iframe>
-          </div>
-        </div>
-      </section>
+<BaseLayout
+  title={title}
+  description={description}
+  slug={PAGES.guide}
+  navKey="guide"
+  ogImage="og-guide.png"
+  ogImageAlt="境町⇄東京 高速バスの乗車ガイド"
+  ogType="article"
+  keywords={["境町 高速バス のりば", "東京駅八重洲南口 高速バスのりば", "王子駅 高速バスのりば", "境町バス 乗り方"]}
+  jsonLd={jsonLd}
+>
+  <main id="main" class="container page">
+    <div class="stack">
+      <h1 style="font-size:clamp(24px,5vw,30px);">乗車ガイド</h1>
+      <p class="muted" style="font-size:15px;max-width:62ch;">
+        のりばの場所、支払い、当日の流れをまとめました。初めて乗る方はここだけ読めば大丈夫です。
+      </p>
+    </div>
 
-      <section>
-        <h2>東京駅八重洲南口</h2>
-        <div class="guide-grid">
-          <div>
-            <p>東京駅八重洲南口のバスターミナルから乗車できます。改札から少し距離があるため、出発の10分前到着をおすすめします。夕方以降は混雑しやすいので時間に余裕を持ちましょう。</p>
-            <ul>
-              <li>最寄り改札: JR東京駅 八重洲南口</li>
-              <li>目印: バスターミナル4番のりば</li>
-              <li>待合スペース: 屋内ベンチ、売店あり</li>
-            </ul>
-          </div>
-          <div class="guide-media">
-            <iframe
-              title="東京駅八重洲南口 バスターミナル"
-              loading="lazy"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.099156648494!2d139.7681366765675!3d35.68098943004761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188bf6528df7c3%3A0x3efea2d1719ab11!2z5p2x5Lqs6YO95Y-w5p2R5bel5aSnIOmrmOafpeS6rOOCuOODvOODvOOCuSBDUzAwMS0wMTE1IOOCuuOCv-ODvOODk-OCuuODvOODq-ODvA!5e0!3m2!1sja!2sjp!4v1727880001000!5m2!1sja!2sjp"
-              allowfullscreen
-            ></iframe>
-          </div>
-        </div>
-      </section>
+    <section class="card card--padded prose" id="stops">
+      <h2>のりば</h2>
+      <div class="stop-grid">
+        {stopOrder.map((stopId) => {
+          const stop = stops[stopId];
+          return (
+            <div class="info-card">
+              <span class="info-card__title">{stop.name}</span>
+              {stop.platform && <span class="info-card__desc">{stop.platform}</span>}
+              {stop.access && <span class="info-card__desc">{stop.access}</span>}
+              {stop.mapUrl && (
+                <a class="button button--small button--quiet" href={stop.mapUrl} target="_blank" rel="noopener noreferrer" style="justify-self:start;">
+                  地図で開く <span aria-hidden="true">↗</span>
+                </a>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <p class="muted" style="font-size:13px;">
+        のりばの位置は変更される場合があります。当日は現地の案内表示もあわせてご確認ください。
+      </p>
+    </section>
 
-      <section>
-        <h2>王子駅（北口ロータリー）</h2>
-        <div class="guide-grid">
-          <div>
-            <p>王子駅北口ロータリーの専用乗り場から乗車します。地下鉄南北線をご利用の方は、王子駅3番出口から地上に出て徒歩1分です。</p>
-            <ul>
-              <li>最寄り出口: JR王子駅 北口 / 東京メトロ南北線 王子駅3番出口</li>
-              <li>待合スペース: 屋外ベンチのみ</li>
-              <li>注意点: 雨天時は屋根が少ないので雨具をご用意ください</li>
-            </ul>
-          </div>
-          <div class="guide-media">
-            <iframe
-              title="王子駅北口ロータリー"
-              loading="lazy"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3238.6761289591144!2d139.7336701765696!3d35.75215162646185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f1a991cfab85%3A0xd39b1d4f08c3c833!2z5pyo5rSl5biC44Ki44O844On44Oz44OJ44O844Or44K5IOOCouODvOODleOCouODvOODieOCq-ODs-ODg-OCow!5e0!3m2!1sja!2sjp!4v1727880002000!5m2!1sja!2sjp"
-              allowfullscreen
-            ></iframe>
-          </div>
-        </div>
-      </section>
+    <section class="card card--padded prose" id="fares">
+      <h2>運賃・支払い</h2>
+      <p>
+        運賃は改定されることがあるため、本アプリでは金額を掲載していません。<strong
+          >ご乗車前に運行事業者の公式ページで最新の運賃をご確認ください。</strong
+        >
+      </p>
+      {fares?.note && <p class="muted">{fares.note}</p>}
+      {fares && fares.payments.length > 0 && (
+        <>
+          <h3>支払い方法</h3>
+          <ul>
+            {fares.payments.map((payment) => (
+              <li>{payment}</li>
+            ))}
+          </ul>
+        </>
+      )}
+      <div class="chip-row">
+        <a class="button button--primary" href={OFFICIAL_LINKS.kantetsu} target="_blank" rel="noopener noreferrer">
+          関東鉄道の運賃案内 <span aria-hidden="true">↗</span>
+        </a>
+        <a class="button" href={OFFICIAL_LINKS.jrbus} target="_blank" rel="noopener noreferrer">
+          JRバス関東 <span aria-hidden="true">↗</span>
+        </a>
+        <a class="button" href={OFFICIAL_LINKS.town} target="_blank" rel="noopener noreferrer">
+          境町公式サイト <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
 
-      <section>
-        <h2>乗車の流れ</h2>
-        <ol class="guide-steps">
-          <li>発車時刻を当サイトで確認し、5分前には乗り場に到着する</li>
-          <li>乗車時に整理券を受け取る（東京発では不要の場合あり）</li>
-          <li>降車時に運賃表を確認し、現金または回数券で支払う</li>
-          <li>降車後は乗車券控えや領収書を確認し、忘れ物がないかチェック</li>
-        </ol>
-      </section>
-      <section class="content-cta">
-        <h3>あわせて読みたい</h3>
-        <ul>
-          <li><a class="link" href={withBase('/faq/')}>境町バス FAQ</a></li>
-          <li><a class="link" href={withBase('/sakai-to-tokyo/')}>境町 → 東京 次発ページ</a></li>
-          <li><a class="link" href={withBase('/tokyo-to-sakai/')}>東京 → 境町 次発ページ</a></li>
-        </ul>
-      </section>
-    </main>
-    <footer class="container footer">
-      <span>© 2025 Amida Design · Sakaimachi Bus Mini</span>
-      <nav class="footer-links" aria-label="フッターリンク">
-        <a class="link" href={withBase('/')}>総合トップ</a>
-        <a class="link" href={withBase('/faq/')}>FAQ</a>
-        <a class="link" href="https://github.com/ysatodat/Sakaimachi-Tokyo-Bus-App" target="_blank" rel="noreferrer">GitHub</a>
-      </nav>
-    </footer>
-  </body>
-</html>
+    <section class="card card--padded prose" id="flow">
+      <h2>乗車当日の流れ</h2>
+      <ol>
+        <li><a href={withBase(PAGES.home)}>次発ページ</a>で発車時刻とカウントダウンを確認します。</li>
+        <li>「バス停まで徒歩何分？」を自分の所要時間に設定しておくと、間に合うかどうかが色で分かります。</li>
+        <li>発車の5分前までにのりばへ。座席は先着順です。</li>
+        <li>行き先表示を確認して乗車し、案内に従って運賃を支払います。</li>
+        <li>降車時は忘れ物がないかご確認ください。</li>
+      </ol>
+      <p class="muted">
+        高速道路の渋滞により到着が遅れることがあります。乗り継ぎがある場合は余裕をもった計画をおすすめします。
+      </p>
+    </section>
+
+    <section class="card card--padded prose" id="tips">
+      <h2>知っておくと便利なこと</h2>
+      <ul>
+        <li>土曜・日曜に加えて、<strong>祝日・振替休日・国民の休日も土日祝ダイヤ</strong>です。アプリが自動で判定します。</li>
+        <li>境町発の便は、平日と土日祝で王子駅・東京駅への到着時刻が異なります。</li>
+        <li>東京発の便は東京駅 → 王子駅 → 境町の順に停車します。王子駅から乗る場合は、のりばの切り替えで発車時刻が変わります。</li>
+        <li>ホーム画面に追加しておくと、オフラインでも時刻表を確認できます。</li>
+      </ul>
+      <p class="muted" style="font-size:13px;">
+        本ページの情報は{meta.revisionLabel}時点の公開情報にもとづく参考情報です。最新の内容は公式サイトでご確認ください。
+      </p>
+    </section>
+
+    <section class="callout">
+      <h2 style="font-size:16px;">あわせて読みたい</h2>
+      <ul class="prose" style="padding-left:1.25em;">
+        <li><a href={withBase(PAGES.timetable)}>全便時刻表（平日・土日祝）</a></li>
+        <li><a href={withBase(PAGES.faq)}>よくある質問</a></li>
+        <li><a href={withBase(PAGES.sakaiToTokyo)}>境町 → 東京 の次発</a></li>
+        <li><a href={withBase(PAGES.tokyoToSakai)}>東京 → 境町 の次発</a></li>
+      </ul>
+    </section>
+  </main>
+</BaseLayout>

@@ -152,3 +152,6 @@ vite.config.ts.timestamp-*
 
 # OS junk
 .DS_Store
+
+# Lighthouse CI
+.lighthouseci/
